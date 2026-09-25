@@ -165,6 +165,32 @@ button{font:inherit;cursor:pointer;scroll-margin-bottom:100px}
 @keyframes flip{0%{transform:rotateY(90deg) scale(.8);opacity:0}100%{transform:none;opacity:1}}
 .reveal h2{font-family:Georgia,serif;font-size:26px}
 .reveal .xpup{font-family:Georgia,serif;font-size:40px;color:#ff9a52;text-shadow:0 0 22px rgba(255,122,47,.6)}
+.gbtn{margin-left:auto;border:1px solid var(--brass);color:var(--brass);background:transparent;border-radius:999px;padding:5px 12px;font-family:Georgia,serif;font-size:12.5px;cursor:pointer}
+.gbtn:active{background:rgba(201,151,63,.14)}
+.howbtn{margin:10px 0 0;border:1px dashed var(--brass);color:var(--brass);background:transparent;border-radius:8px;padding:10px 12px;font-family:Georgia,serif;font-size:14px;width:100%;cursor:pointer}
+.howbtn:active{background:rgba(201,151,63,.1)}
+#guide .in{justify-content:flex-start;max-width:600px;margin:0 auto;text-align:left;align-items:stretch}
+#guide .gtop{display:flex;align-items:center;gap:10px;width:100%;margin-bottom:10px}
+#guide .gtop .glogo{width:30px;height:30px}
+#guide .gtop .gt{font-family:system-ui,sans-serif;font-size:11px;color:var(--brass);letter-spacing:.18em;text-transform:uppercase}
+#guide .gtop .gx{margin-left:auto;color:var(--smoke);background:transparent;border:0;font-size:28px;line-height:1;cursor:pointer;padding:0 4px}
+#guide .scroll{border:1px solid var(--hideline);border-radius:12px;background:linear-gradient(180deg,#1b1510,#14100c);padding:24px 20px;position:relative}
+#guide .scroll::before,#guide .scroll::after{content:"";position:absolute;left:16px;right:16px;border-top:1px dashed rgba(201,151,63,.35)}
+#guide .scroll::before{top:12px}
+#guide .scroll::after{bottom:12px}
+#guide .gkick{font-family:system-ui,sans-serif;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--brass);margin-top:6px}
+#guide h2{font-family:Georgia,serif;font-size:24px;color:var(--parch);margin:6px 0 12px;line-height:1.15}
+#guide .gdm{font-family:Georgia,serif;font-size:16.5px;line-height:1.55;color:#e7d8bf}
+#guide .gplain{margin-top:16px;border-left:3px solid var(--ember);padding:10px 0 10px 14px;background:rgba(255,122,47,.06)}
+#guide .gplain b{display:block;font-family:system-ui,sans-serif;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ember);margin-bottom:5px}
+#guide .gplain span{font-family:system-ui,sans-serif;font-size:14.5px;line-height:1.5;color:#d8c7ad}
+#guide .gnav{display:flex;align-items:center;gap:12px;margin-top:18px}
+#guide .gdots{display:flex;gap:6px;flex:1;justify-content:center;flex-wrap:wrap}
+#guide .gdots i{width:7px;height:7px;border-radius:50%;background:var(--hideline)}
+#guide .gdots i.on{background:var(--brass)}
+#guide .gnav .btn{min-width:104px}
+#guide .gprev{visibility:hidden}
+#guide .gprev.show{visibility:visible}
 /* opening */
 #opening .coal{width:6px;height:6px;border-radius:50%;background:#ff8a3c;box-shadow:0 0 14px 4px rgba(255,122,47,.8);animation:emberpulse 1.6s ease-in-out infinite}
 @keyframes emberpulse{0%,100%{transform:scale(.7);opacity:.6}50%{transform:scale(1.3);opacity:1}}
@@ -222,7 +248,7 @@ button{font:inherit;cursor:pointer;scroll-margin-bottom:100px}
 <header>
   <img src="bsa-logo.png" alt="">
   <div><h1>Back Office</h1><small>Bright Sword Artisan</small></div>
-  <span class="ver">office v3.1 &middot; Sep 25 2026</span>
+  <button class="gbtn" id="guideBtn">Guide</button><span class="ver">office v3.2 &middot; Sep 25 2026</span>
 </header>
 <div class="banner" id="storeBanner">This copy cannot save. Open the app from its web address (not from Downloads) so your entries keep. Until then, use <b>Save backup</b> on the Office tab after every session.</div>
 
@@ -241,6 +267,7 @@ button{font:inherit;cursor:pointer;scroll-margin-bottom:100px}
   </div>
   <div class="skills" id="qSkills"></div>
   <div class="card" style="margin-top:12px;min-height:0;padding:0"><div class="body"><div class="type">The Dungeon Master</div><div class="dm" id="dmLine"></div></div></div>
+  <button class="howbtn" id="howBtn">New here? Read the guide &rsaquo;</button>
   <div class="arcmap" id="arcMap"></div>
   <div class="row between" style="margin-top:16px"><h3>This week's hand</h3><span class="muted" id="handInfo"></span></div>
   <div class="hand" id="handHost"></div>
@@ -474,6 +501,20 @@ button{font:inherit;cursor:pointer;scroll-margin-bottom:100px}
   <div id="revealCard"></div>
   <div class="dm" id="revealDm" style="max-width:420px"></div>
   <button class="btn ember" id="revealOk" style="margin-top:18px">Onward</button>
+</div></div>
+<div class="ov" id="guide"><div class="in">
+  <div class="gtop"><img src="bsa-logo.png" class="glogo" alt=""><div class="gt">The Forge Year &middot; Guide</div><button class="gx" id="guideClose" aria-label="Close">&times;</button></div>
+  <div class="scroll">
+    <div class="gkick" id="gKick"></div>
+    <h2 id="gTitle"></h2>
+    <div class="gdm" id="gDm"></div>
+    <div class="gplain"><b>What this means</b><span id="gPlain"></span></div>
+  </div>
+  <div class="gnav">
+    <button class="btn ghost gprev" id="guidePrev">Back</button>
+    <div class="gdots" id="gDots"></div>
+    <button class="btn ember" id="guideNext">Next</button>
+  </div>
 </div></div>
 
 <div class="toast" id="toast"></div>
@@ -744,7 +785,7 @@ var ABILITIES=[
  {id:"boothsense",skill:"merchant",rank:2,name:"Booth Sense",lore:"You know what sold before you count.",effect:"+10% XP on Merchant quests"},
  {id:"secondwind",skill:"merchant",rank:4,name:"Second Wind",lore:"One missed card does not break the week.",effect:"A clean sweep survives one unfinished card"}
 ];
-function freshQuest(){ return { opened:false, initiative:0, zero:{}, zeroDone:false, xp:0, skillxp:{smith:0,chronicler:0,quartermaster:0,scout:0,merchant:0}, done:{}, artifacts:{}, bosses:{}, hand:{week:"",cards:[],sweeps:0}, journal:[], photos:{}, backups:0, sidesUnlocked:["wip","sameday","reply1","noonpic","backupside","bookmark"], lastActive:"", tapped:{}, seenLib:false }; }
+function freshQuest(){ return { opened:false, initiative:0, zero:{}, zeroDone:false, xp:0, skillxp:{smith:0,chronicler:0,quartermaster:0,scout:0,merchant:0}, done:{}, artifacts:{}, bosses:{}, hand:{week:"",cards:[],sweeps:0}, journal:[], photos:{}, backups:0, sidesUnlocked:["wip","sameday","reply1","noonpic","backupside","bookmark"], lastActive:"", tapped:{}, seenLib:false, guideSeen:false }; }
 if (!D.quest) D.quest = freshQuest();
 var Q = D.quest;
 function qById(id){ for (var i=0;i<QUESTS.length;i++) if(QUESTS[i].id===id) return QUESTS[i]; return null; }
@@ -798,6 +839,30 @@ function Q_checksSnapshot(k){ return !!D.checks[k]; }
 function dayDiff(a,b){ return Math.round((new Date(b)-new Date(a))/86400000); }
 
 /* ---------- awards ---------- */
+var GUIDE=[
+ {kick:"A letter from the forge", title:"Jacob, this is your forge.", dm:"You just answered five questions and lit the fire. What you are holding is the back office for Bright Sword Artisan, dressed as a campaign because you are a man who plays them. Every real thing your booth needs lives in here. The game sits on top of the work; it does not replace it.", plain:"This app runs your booth business. The game layer is optional flavor. If you ever want to just use the tools, the tabs work on their own."},
+ {kick:"How you play", title:"Do the work. The forge is watching.", dm:"There is nothing to make up and nothing to fake. You log a real sale, you book a real show, you take a real deposit, and the forge sees it and pays you: experience, levels, and gear. The move is always the real thing.", plain:"Use the app the way you would run any booth: enter your shows, your sales, your orders. That is the whole game. No busywork."},
+ {kick:"The map", title:"Three places you will live.", dm:"Office holds your real tools: shows, the booth log, profit and loss, orders, checklists, and your backup. Quest shows this week's moves and your standing. Cards holds your gear and your post maker. Wander freely; nothing here can break.", plain:"Office = your tools. Quest = what to do next. Cards = your merch designs and the Facebook post maker."},
+ {kick:"Your week", title:"Draw a hand. Play it.", dm:"Each week you draw a small hand of moves from what is open to you. Choose the ones you will actually do, then go do them at the booth or the bench. Play the whole hand and you earn a clean-sweep bonus and a fresh card for your library.", plain:"Every week, pick a few tasks you plan to do. Finish them all for a bonus. Skipping a week costs nothing; the hand resets."},
+ {kick:"What you unlock: gear", title:"The Armory is yours to design.", dm:"Doing the work forges gear: your calling card, the booth shirt, the hat, stickers, the banner, the price board, and more. Each unlocked piece opens at the forge, where you pick the layout, the color, and the words yourself. It is your mark on your own goods.", plain:"You unlock merch and print pieces by doing normal tasks, then design each one in the app. Booking three shows opens the QR table card; logging a sale opens the price board; and so on."},
+ {kick:"The handoff", title:"You design it. Mot prints nothing on you.", dm:"When a piece looks right, tap Send design to Mot. It hands him your choices and the image. He turns it into the print-ready file and sends it back to you. Then you take it to any printer or website you like and order it. He makes the file; you own the order.", plain:"Send your finished design to Mot. He makes the print file and returns it. You order the printing wherever you want."},
+ {kick:"What you unlock: reach", title:"The Herald posts for you.", dm:"A finished Facebook post in about a minute: pick a shape, pick a photo off your phone, write one line, and download it. More templates open as you go, so the booth keeps showing up in people's feeds between shows.", plain:"A quick post maker for Facebook. Pick a photo, pick a template, download, post. New templates unlock as you play."},
+ {kick:"The big moments", title:"Bosses and seasons.", dm:"Your real milestones are bosses: your first show, the Black Friday rush, the Taxman at year's end. You beat a boss by doing the real thing, not by grinding. Seasons open across the year, each timed to the craft-show calendar, so the app is always pointed at what is next.", plain:"Milestones like your first show and tax time are 'bosses' you clear by completing them. New seasons open over the year as you finish the last."},
+ {kick:"What is asked of you", title:"A few minutes a week.", dm:"Log every show the day it happens, while the numbers are fresh. Save a backup from the Office tab after each show so nothing is ever lost. Beyond that, a handful of taps a week keeps the whole thing alive. Fall behind and the forge simply waits for you.", plain:"Log shows same-day. Back up your file after every show (Office tab). A few taps a week is plenty. Missing time does not break anything."},
+ {kick:"Reaching Mot", title:"Send a raven.", dm:"On the Journal tab, Send a raven drops Mot a short message with where you stand and your Session Zero answers. That is how he takes what you build here and carves it into your website. He does not watch over your shoulder; the raven is how you call him.", plain:"Journal tab, Send a raven, texts Mot your progress and answers. Use it whenever you want the site updated or have a question."},
+ {kick:"How you win", title:"By next holiday season.", dm:"A booth that runs itself. Records so clean that taxes are a morning, not a month. Merch that sells the booth while you wear it. A site that brings strangers to your table. Play the year and you end it with a full ledger and a business that finally looks the way your work already is.", plain:"Winning = a booth that runs itself, easy taxes, merch that markets you, and a full year of records. Tap Enter the forge to begin.", cta:true}
+];
+var guideI=0;
+function renderGuide(){
+  var g=GUIDE[guideI];
+  $("gKick").textContent=g.kick; $("gTitle").textContent=g.title; $("gDm").textContent=g.dm; $("gPlain").textContent=g.plain;
+  $("guidePrev").classList.toggle("show", guideI>0);
+  $("guideNext").textContent = (guideI>=GUIDE.length-1) ? "Enter the forge" : "Next";
+  var d=""; for (var i=0;i<GUIDE.length;i++) d+='<i class="'+(i===guideI?"on":"")+'"></i>'; $("gDots").innerHTML=d;
+}
+function openGuide(i,auto){ guideI=i||0; if (auto){ Q.guideSeen=true; saveCore(); } $("guide").classList.add("on"); document.body.style.overflow="hidden"; renderGuide(); }
+function closeGuide(){ $("guide").classList.remove("on"); document.body.style.overflow=""; }
+function maybeOpenGuide(){ if (Q.zeroDone && !Q.guideSeen && !$("opening").classList.contains("on") && !$("zero").classList.contains("on") && !$("reveal").classList.contains("on") && !$("guide").classList.contains("on")) openGuide(0,true); }
 var REVEAL_QUEUE=[];
 function skillBonus(skill){ var ab={smith:"stitch",chronicler:"crier",quartermaster:"ledgereye",scout:"pathfinder",merchant:"boothsense"}[skill]; return rank(skill)>=2 && ab ? 1.1 : 1; }
 function award(xp, skill, why){
@@ -1069,7 +1134,7 @@ function renderJournal(){
 function renderGame(){ renderQuest(); renderLibrary(); renderBosses(); renderJournal(); renderArmory(); renderHerald(); if (H.tpl && $("hTitle") && !$("hTitle").value) loadTpl(H.tpl); }
 
 /* ---------- reveals ---------- */
-function flushReveals(){ if (!REVEAL_QUEUE.length) return; if ($("p-log") && $("p-log").classList.contains("on")) return; if ($("reveal").classList.contains("on")) return; var r=REVEAL_QUEUE.shift(); $("revealKick").textContent=r.kick; $("revealTitle").textContent=r.title; $("revealXp").textContent=r.xp||""; $("revealCard").innerHTML=r.card||""; $("revealDm").textContent=r.dm||""; $("reveal").classList.add("on"); }
+function flushReveals(){ if (!REVEAL_QUEUE.length){ maybeOpenGuide(); return; } if ($("p-log") && $("p-log").classList.contains("on")) return; if ($("reveal").classList.contains("on")) return; var r=REVEAL_QUEUE.shift(); $("revealKick").textContent=r.kick; $("revealTitle").textContent=r.title; $("revealXp").textContent=r.xp||""; $("revealCard").innerHTML=r.card||""; $("revealDm").textContent=r.dm||""; $("reveal").classList.add("on"); }
 
 /* ---------- session zero ---------- */
 var ZERO=[
@@ -1122,6 +1187,10 @@ document.addEventListener("click", function(e){
   if (t.closest("#d20")){ rollD20(); return; }
   if (t.closest("#openBegin")){ $("opening").classList.remove("on"); Q.opened=true; saveCore(); if (!Q.zeroDone){ zeroI=0; showZero(); } return; }
   if (t.closest("#replayOpening")){ playOpening(); return; }
+  if (t.closest("#guideBtn")||t.closest("#howBtn")){ openGuide(0,false); return; }
+  if (t.closest("#guideClose")){ closeGuide(); return; }
+  if (t.closest("#guidePrev")){ if (guideI>0){ guideI--; renderGuide(); } return; }
+  if (t.closest("#guideNext")){ if (guideI>=GUIDE.length-1){ closeGuide(); } else { guideI++; renderGuide(); } return; }
   var qd=t.closest("[data-qdone]"); if (qd){ var q=qById(qd.getAttribute("data-qdone")); if (q){ completeQuest(q); markHandDone(q.id); questCheck(); } return; }
   var qh=t.closest("[data-qhand]"); if (qh){ toggleHand(qh.getAttribute("data-qhand")); renderLibrary(); return; }
   var qp=t.closest("[data-qphoto]"); if (qp){ var inp=document.createElement("input"); inp.type="file"; inp.accept="image/*"; inp.onchange=function(){ if(inp.files[0]) attachPhoto(qp.getAttribute("data-qphoto"),inp.files[0]); }; inp.click(); return; }
@@ -1145,6 +1214,8 @@ renderAll();
   renderGame();
   if (!Q.opened) playOpening();
   weekTick(); saveCore();
+  if (/[?&]guide=1/.test(location.search)) setTimeout(function(){ openGuide(0,false); },60);
+  else maybeOpenGuide();
 })();
 
 </script>
