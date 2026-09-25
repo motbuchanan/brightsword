@@ -3,10 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="build" content="office v3.1">
+<meta name="build" content="office v3.4">
 <meta name="theme-color" content="#171310">
 <title>Bright Sword Back Office</title>
 <link rel="icon" type="image/png" href="bsa-logo.png">
+<link rel="manifest" href="bsa-office.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bright Sword">
 <style>
 :root{--coal:#171310;--coal2:#120f0c;--hide:#241c14;--hideline:#3a2c1f;--parch:#efe3cf;--ember:#ff7a2f;--emberdeep:#c9491a;--brass:#c9973f;--smoke:#a8917a;--ink:#241a10;--ok:#7fb069;--warn:#e0a13c}
 *{box-sizing:border-box;margin:0}
@@ -191,6 +197,17 @@ button{font:inherit;cursor:pointer;scroll-margin-bottom:100px}
 #guide .gnav .btn{min-width:104px}
 #guide .gprev{visibility:hidden}
 #guide .gprev.show{visibility:visible}
+.card.store{border-color:var(--brass)}
+.card.store.ready{box-shadow:0 0 0 1px var(--brass), 0 0 26px rgba(201,151,63,.22)}
+.card.store .lore{color:#d8c7ad}
+a.go{text-decoration:none;display:inline-block}
+#storefrontHost{margin-top:12px}
+#verPanel .in{align-items:center;justify-content:center}
+#verPanel .vercard{max-width:340px;width:86%;background:#1b1510;border:1px solid var(--hideline);border-radius:14px;padding:22px 20px;text-align:center}
+#verPanel .vtitle{font-family:Georgia,serif;color:var(--brass);font-size:12px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:12px}
+#verPanel .verrows{font-family:system-ui,sans-serif;font-size:14px;color:#e7d8bf;line-height:1.9}
+#verPanel .verrows b{color:var(--parch)}
+#verPanel .verstatus{margin-top:14px;font-family:Georgia,serif;font-style:italic;color:var(--smoke);font-size:13.5px}
 /* opening */
 #opening .coal{width:6px;height:6px;border-radius:50%;background:#ff8a3c;box-shadow:0 0 14px 4px rgba(255,122,47,.8);animation:emberpulse 1.6s ease-in-out infinite}
 @keyframes emberpulse{0%,100%{transform:scale(.7);opacity:.6}50%{transform:scale(1.3);opacity:1}}
@@ -248,9 +265,10 @@ button{font:inherit;cursor:pointer;scroll-margin-bottom:100px}
 <header>
   <img src="bsa-logo.png" alt="">
   <div><h1>Back Office</h1><small>Bright Sword Artisan</small></div>
-  <button class="gbtn" id="guideBtn">Guide</button><span class="ver">office v3.2 &middot; Sep 25 2026</span>
+  <button class="gbtn" id="guideBtn">Guide</button><span class="ver" id="verBadge" role="button" tabindex="0" style="cursor:pointer">office v3.4 &middot; Sep 25 2026</span>
 </header>
 <div class="banner" id="storeBanner">This copy cannot save. Open the app from its web address (not from Downloads) so your entries keep. Until then, use <b>Save backup</b> on the Office tab after every session.</div>
+<div class="banner install" id="installBar" style="display:none;background:#1b1510;color:var(--parch);border-color:var(--brass)"><span id="installText">Keep this on your home screen so it is a tap away and updates itself.</span> <button class="btn small ember heat" id="installBtn" style="margin-left:8px">Add to home screen</button> <button class="btn small ghost heat" id="installDismiss">Not now</button></div>
 
 <main>
 <!-- ================= QUEST ================= -->
@@ -268,6 +286,7 @@ button{font:inherit;cursor:pointer;scroll-margin-bottom:100px}
   <div class="skills" id="qSkills"></div>
   <div class="card" style="margin-top:12px;min-height:0;padding:0"><div class="body"><div class="type">The Dungeon Master</div><div class="dm" id="dmLine"></div></div></div>
   <button class="howbtn" id="howBtn">New here? Read the guide &rsaquo;</button>
+  <div id="storefrontHost"></div>
   <div class="arcmap" id="arcMap"></div>
   <div class="row between" style="margin-top:16px"><h3>This week's hand</h3><span class="muted" id="handInfo"></span></div>
   <div class="hand" id="handHost"></div>
@@ -785,7 +804,7 @@ var ABILITIES=[
  {id:"boothsense",skill:"merchant",rank:2,name:"Booth Sense",lore:"You know what sold before you count.",effect:"+10% XP on Merchant quests"},
  {id:"secondwind",skill:"merchant",rank:4,name:"Second Wind",lore:"One missed card does not break the week.",effect:"A clean sweep survives one unfinished card"}
 ];
-function freshQuest(){ return { opened:false, initiative:0, zero:{}, zeroDone:false, xp:0, skillxp:{smith:0,chronicler:0,quartermaster:0,scout:0,merchant:0}, done:{}, artifacts:{}, bosses:{}, hand:{week:"",cards:[],sweeps:0}, journal:[], photos:{}, backups:0, sidesUnlocked:["wip","sameday","reply1","noonpic","backupside","bookmark"], lastActive:"", tapped:{}, seenLib:false, guideSeen:false }; }
+function freshQuest(){ return { opened:false, initiative:0, zero:{}, zeroDone:false, xp:0, skillxp:{smith:0,chronicler:0,quartermaster:0,scout:0,merchant:0}, done:{}, artifacts:{}, bosses:{}, hand:{week:"",cards:[],sweeps:0}, journal:[], photos:{}, backups:0, sidesUnlocked:["wip","sameday","reply1","noonpic","backupside","bookmark"], lastActive:"", tapped:{}, seenLib:false, guideSeen:false, storefrontClaimed:false }; }
 if (!D.quest) D.quest = freshQuest();
 var Q = D.quest;
 function qById(id){ for (var i=0;i<QUESTS.length;i++) if(QUESTS[i].id===id) return QUESTS[i]; return null; }
@@ -863,6 +882,25 @@ function renderGuide(){
 function openGuide(i,auto){ guideI=i||0; if (auto){ Q.guideSeen=true; saveCore(); } $("guide").classList.add("on"); document.body.style.overflow="hidden"; renderGuide(); }
 function closeGuide(){ $("guide").classList.remove("on"); document.body.style.overflow=""; }
 function maybeOpenGuide(){ if (Q.zeroDone && !Q.guideSeen && !$("opening").classList.contains("on") && !$("zero").classList.contains("on") && !$("reveal").classList.contains("on") && !$("guide").classList.contains("on")) openGuide(0,true); }
+var STOREFRONT_LIVE=false;        /* Mot: set to true and push once the site is finalized with Jacob's answers */
+var STOREFRONT_URL="index.html";  /* the finished storefront, opens in a new tab */
+function storefrontCheck(){
+  if (Q.zeroDone && STOREFRONT_LIVE && !Q.storefrontClaimed){
+    Q.storefrontClaimed=true;
+    var gain=award(100,"merchant","Storefront unlocked");
+    REVEAL_QUEUE.push({kick:"The reward", title:"Your storefront is forged", xp:"+"+gain+" XP", dm:"The words you gave at Session Zero are now a storefront the whole world can reach. Open it from the top of your Quest tab, and send it to anyone."});
+    saveCore();
+  }
+}
+function renderStorefront(){
+  var host=$("storefrontHost"); if(!host) return;
+  if (!Q.zeroDone){ host.innerHTML=""; return; }
+  if (STOREFRONT_LIVE){
+    host.innerHTML='<div class="card store ready"><span class="gem mythic"></span><div class="body"><div class="type">Your storefront</div><div class="title">It is forged.</div><div class="lore">Your site is live, built from the words you gave at Session Zero. Show it off.</div><div class="act"><button class="go heat" id="storeOpen">Open your storefront</button> <button class="btn small ghost heat" id="storeShare">Copy the link</button></div></div></div>';
+  } else {
+    host.innerHTML='<div class="card store locked"><span class="gem mythic"></span><div class="body"><div class="type">Your storefront</div><div class="title">The smith is forging it</div><div class="lore">Your Session Zero answers are on their way to the smith. When your storefront is ready, it appears right here. Keep playing while the metal heats.</div><div class="act"><span class="muted">Forging\u2026</span></div></div></div>';
+  }
+}
 var REVEAL_QUEUE=[];
 function skillBonus(skill){ var ab={smith:"stitch",chronicler:"crier",quartermaster:"ledgereye",scout:"pathfinder",merchant:"boothsense"}[skill]; return rank(skill)>=2 && ab ? 1.1 : 1; }
 function award(xp, skill, why){
@@ -892,6 +930,7 @@ function questCheck(){
   QUESTS.forEach(function(q){ if (q.proof!=="auto" || !isUnlocked(q) || !inWindow(q)) return; if (!C[q.auto]) return; if (q.repeat){ var key=q.id+":"+JSON.stringify(sigFor(q,C)); if (Q.tapped[key]) return; Q.tapped[key]=1; completeQuest(q); } else if (!isDone(q)) completeQuest(q); });
   BOSSES.forEach(function(b){ if (arcUnlocked(b.arc)) checkBoss(b,C); });
   armoryCheck();
+  storefrontCheck();
   weekTick();
   saveCore(); renderQuest(); renderArmory(); flushReveals();
 }
@@ -1131,7 +1170,7 @@ function renderJournal(){
   $("journalKpi").innerHTML='<div><small>Quests</small><b>'+done+'</b></div><div><small>Bosses</small><b>'+kills+'</b></div><div><small>Artifacts</small><b>'+arts+'</b></div>';
   $("journalHost").innerHTML=Q.journal.slice(0,80).map(function(j){ return '<div class="item"><div class="t"><b>'+esc(j.t)+'</b><span>'+fmtDate(j.d)+' · '+esc(SKILL_NAMES[j.s]||"")+'</span></div><span class="big" style="font-size:16px">+'+j.xp+'</span></div>'; }).join("")||'<div class="empty">Nothing yet. The first entry is Session Zero.</div>';
 }
-function renderGame(){ renderQuest(); renderLibrary(); renderBosses(); renderJournal(); renderArmory(); renderHerald(); if (H.tpl && $("hTitle") && !$("hTitle").value) loadTpl(H.tpl); }
+function renderGame(){ renderQuest(); renderStorefront(); renderLibrary(); renderBosses(); renderJournal(); renderArmory(); renderHerald(); if (H.tpl && $("hTitle") && !$("hTitle").value) loadTpl(H.tpl); }
 
 /* ---------- reveals ---------- */
 function flushReveals(){ if (!REVEAL_QUEUE.length){ maybeOpenGuide(); return; } if ($("p-log") && $("p-log").classList.contains("on")) return; if ($("reveal").classList.contains("on")) return; var r=REVEAL_QUEUE.shift(); $("revealKick").textContent=r.kick; $("revealTitle").textContent=r.title; $("revealXp").textContent=r.xp||""; $("revealCard").innerHTML=r.card||""; $("revealDm").textContent=r.dm||""; $("reveal").classList.add("on"); }
@@ -1188,6 +1227,8 @@ document.addEventListener("click", function(e){
   if (t.closest("#openBegin")){ $("opening").classList.remove("on"); Q.opened=true; saveCore(); if (!Q.zeroDone){ zeroI=0; showZero(); } return; }
   if (t.closest("#replayOpening")){ playOpening(); return; }
   if (t.closest("#guideBtn")||t.closest("#howBtn")){ openGuide(0,false); return; }
+  if (t.closest("#storeOpen")){ window.open(new URL(STOREFRONT_URL, location.href).href, "_blank", "noopener"); return; }
+  if (t.closest("#storeShare")){ var su=new URL(STOREFRONT_URL, location.href).href; if (navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(su).then(function(){ if(window.toast) toast("Link copied"); }).catch(function(){ if(window.toast) toast(su); }); } else if (window.toast) toast(su); return; }
   if (t.closest("#guideClose")){ closeGuide(); return; }
   if (t.closest("#guidePrev")){ if (guideI>0){ guideI--; renderGuide(); } return; }
   if (t.closest("#guideNext")){ if (guideI>=GUIDE.length-1){ closeGuide(); } else { guideI++; renderGuide(); } return; }
@@ -1214,10 +1255,79 @@ renderAll();
   renderGame();
   if (!Q.opened) playOpening();
   weekTick(); saveCore();
+  storefrontCheck(); flushReveals();
   if (/[?&]guide=1/.test(location.search)) setTimeout(function(){ openGuide(0,false); },60);
   else maybeOpenGuide();
 })();
 
+</script>
+<div class="ov" id="verPanel"><div class="in">
+  <div class="vercard">
+    <div class="vtitle">The Forge Year</div>
+    <div class="verrows" id="verRows"></div>
+    <div class="verstatus" id="verStatus"></div>
+    <div class="row" style="justify-content:center;gap:10px;margin-top:14px">
+      <button class="btn ember" id="verRefresh" style="display:none">Refresh now</button>
+      <button class="btn ghost" id="verClose">Close</button>
+    </div>
+  </div>
+</div></div>
+<script>
+(function(){
+  "use strict";
+  var APP_VER="office v3.4", APP_DATE_DISP="Sep 25 2026", APP_DATE_ISO="2026-09-25", BUILD_TAG="bsa 3.4 2026-09-25";
+  var standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone===true;
+  function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+
+  /* register the service worker so the app installs and works offline; HTML is network-first so pushes show up on next open */
+  if ('serviceWorker' in navigator){
+    window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
+  }
+
+  /* ---- install bar ---- */
+  var bar=document.getElementById('installBar'), btn=document.getElementById('installBtn'), dis=document.getElementById('installDismiss'), txt=document.getElementById('installText');
+  var deferred=null, isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  function dismissed(){ return lsGet('bsa-install-dismissed')==='1'; }
+  function showBar(){ if(bar && !standalone && !dismissed()) bar.style.display='block'; }
+  function hideBar(){ if(bar) bar.style.display='none'; }
+  window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); deferred=e; if(txt) txt.textContent='Keep this on your home screen so it is a tap away and updates itself.'; if(btn) btn.textContent='Add to home screen'; showBar(); });
+  window.addEventListener('appinstalled', function(){ hideBar(); deferred=null; });
+  if (isIOS && !standalone && !dismissed()){ if(txt) txt.textContent='Keep this on your home screen: tap the Share button, then Add to Home Screen.'; if(btn) btn.textContent='Got it'; setTimeout(showBar,800); }
+  if(btn) btn.addEventListener('click', function(){
+    if (deferred){ deferred.prompt(); deferred.userChoice.then(function(){ deferred=null; hideBar(); }); }
+    else if (isIOS){ if(window.toast) toast('Tap the Share icon, then Add to Home Screen'); hideBar(); lsSet('bsa-install-dismissed','1'); }
+    else { hideBar(); }
+  });
+  if(dis) dis.addEventListener('click', function(){ hideBar(); lsSet('bsa-install-dismissed','1'); });
+
+  /* ---- version badge: dates + days + update check ---- */
+  var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function human(dt){ return M[dt.getMonth()]+" "+dt.getDate()+" "+dt.getFullYear(); }
+  function daysSince(iso){ var a=new Date(iso+"T12:00:00"), b=new Date(); b.setHours(12,0,0,0); return Math.max(0, Math.round((b-a)/86400000)); }
+  function openVer(){
+    var d=daysSince(APP_DATE_ISO);
+    document.getElementById('verRows').innerHTML=
+      'Version <b>'+APP_VER.replace('office ','')+'</b><br>'+
+      'Today <b>'+human(new Date())+'</b><br>'+
+      'Last update <b>'+APP_DATE_DISP+'</b><br>'+
+      '<b>'+d+'</b> day'+(d===1?'':'s')+' since the last update';
+    var st=document.getElementById('verStatus'), rb=document.getElementById('verRefresh');
+    st.textContent='Checking for a newer version\u2026'; rb.style.display='none';
+    document.getElementById('verPanel').classList.add('on'); document.body.style.overflow='hidden';
+    fetch('brightsword-office.html?vc='+Date.now(), {cache:'no-store'}).then(function(r){ return r.text(); }).then(function(t){
+      var m=t.match(/bsa \d+\.\d+ \d{4}-\d{2}-\d{2}/);
+      if (m && m[0]!==BUILD_TAG){ st.textContent='A newer version is live.'; rb.style.display='inline-block'; }
+      else if (m){ st.textContent="You are up to date."; }
+      else { st.textContent='Up to date as far as I can tell.'; }
+    }).catch(function(){ st.textContent='Could not check right now (offline).'; });
+  }
+  function closeVer(){ document.getElementById('verPanel').classList.remove('on'); document.body.style.overflow=''; }
+  var vb=document.getElementById('verBadge');
+  if(vb){ vb.addEventListener('click', openVer); vb.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openVer(); } }); }
+  var vc=document.getElementById('verClose'); if(vc) vc.addEventListener('click', closeVer);
+  var vr=document.getElementById('verRefresh'); if(vr) vr.addEventListener('click', function(){ if('serviceWorker' in navigator){ navigator.serviceWorker.getRegistration().then(function(r){ if(r) r.update(); }); } setTimeout(function(){ location.reload(); },150); });
+})();
 </script>
 </body>
 </html>
