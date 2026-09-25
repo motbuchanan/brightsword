@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="build" content="kit v1.0">
+<title>Bright Sword Artisan | Print and merch kit</title>
+<link rel="icon" type="image/png" href="bsa-logo.png">
+<style>
+:root{--coal:#171310;--hide:#241c14;--hideline:#3a2c1f;--parch:#efe3cf;--ember:#ff7a2f;--emberdeep:#c9491a;--brass:#c9973f;--smoke:#a8917a;--ink:#241a10}
+*{box-sizing:border-box;margin:0}
+body{background:var(--coal);color:var(--parch);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+h1,h2,h3{font-family:Georgia,serif;font-weight:400}
+header{text-align:center;padding:46px 20px 26px;border-bottom:1px solid var(--hideline);background:#14100c}
+header h1{font-size:clamp(28px,6vw,44px)}
+header p{color:var(--smoke);margin-top:8px;font-size:14px}
+main{max-width:960px;margin:0 auto;padding:10px 16px 70px}
+.piece{margin-top:44px}
+.piece h2{font-size:22px}
+.piece .spec{color:var(--smoke);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;margin:4px 0 14px}
+.piece .why{color:#cdb99c;font-size:14px;margin-top:12px;max-width:640px}
+.mock{position:relative;overflow:hidden;background:var(--hide);border:1px solid #4a3826;border-radius:8px;box-shadow:0 14px 40px rgba(0,0,0,.5)}
+.serif{font-family:Georgia,serif}
+.kick{letter-spacing:.28em;text-transform:uppercase;color:var(--brass);font-size:.8em}
+.stitch{position:absolute;inset:3.5%;border:2px dashed rgba(201,151,63,.55);border-radius:6px;pointer-events:none}
+.lg{position:absolute}
+/* banner 6x3 */
+.banner{aspect-ratio:2/1;background:radial-gradient(ellipse 80% 90% at 50% 120%,rgba(255,122,47,.28),rgba(0,0,0,0) 65%),#14100c;display:flex;align-items:center;gap:5%;padding:6% 8%}
+.banner img{width:26%}
+.banner .t1{font-size:clamp(28px,7.5vw,74px);line-height:1;color:var(--parch)}
+.banner .t2{font-size:clamp(12px,2.6vw,26px);color:#cdb99c;font-style:italic;margin-top:.5em}
+.banner .t3{font-size:clamp(9px,1.6vw,15px);color:var(--brass);letter-spacing:.24em;text-transform:uppercase;margin-top:1.2em}
+.grommet{position:absolute;width:3%;aspect-ratio:1;border-radius:50%;background:#0f0c09;border:2px solid #8a7350}
+/* table tent card 5x7 */
+.tent{aspect-ratio:5/7;max-width:340px;margin:0 auto;background:var(--parch);color:var(--ink);text-align:center;padding:9% 8%;display:flex;flex-direction:column;align-items:center;justify-content:space-between}
+.tent .stitch{border-color:rgba(92,58,36,.45)}
+.tent img.qr{width:62%;border:3px solid var(--ink);border-radius:6px}
+.tent .t1{font-size:clamp(20px,5vw,30px);line-height:1.05}
+.tent .t2{font-size:13px;color:#6d5942;margin-top:6px;font-style:italic}
+.tent .t3{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#a3400f;margin-top:8px}
+/* price board 11x17 */
+.board{aspect-ratio:11/17;max-width:380px;margin:0 auto;background:var(--parch);color:var(--ink);padding:9% 9%}
+.board .stitch{border-color:rgba(92,58,36,.45)}
+.board img{width:30%;margin:0 auto 6px}
+.board .t1{text-align:center;font-size:clamp(20px,5vw,28px)}
+.board .row{display:flex;align-items:baseline;gap:8px;padding:7px 0;border-bottom:1px dashed #c7b291;font-size:14px}
+.board .row .dots{flex:1;border-bottom:2px dotted #b39a75;transform:translateY(-3px)}
+.board .row b{color:#a3400f;font-family:Georgia,serif}
+.board .fine{text-align:center;font-size:11px;color:#6d5942;margin-top:14px;font-style:italic}
+/* flyer 8.5x11 */
+.flyer{aspect-ratio:8.5/11;max-width:420px;margin:0 auto;background:#14100c;padding:8%}
+.flyer .top{display:flex;gap:6%;align-items:center}
+.flyer .top img{width:28%}
+.flyer .t1{font-size:clamp(22px,5vw,32px);line-height:1.02}
+.flyer .t2{font-size:12px;color:#cdb99c;font-style:italic;margin-top:4px}
+.flyer .photo{margin-top:6%;aspect-ratio:16/9;object-fit:cover;width:100%;border-radius:6px;border:1px solid #4a3826}
+.flyer .list{margin-top:6%;display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;font-size:12px;color:#e6d6bc}
+.flyer .list span::before{content:"\25C6";color:var(--brass);margin-right:6px;font-size:9px}
+.flyer .foot{margin-top:auto;display:flex;align-items:center;gap:12px;padding-top:6%}
+.flyer .foot img{width:18%;border:2px solid var(--parch);border-radius:4px}
+.flyer .foot div{font-size:11px;color:var(--smoke);line-height:1.5}
+.flyer .foot b{display:block;color:var(--parch);font-family:Georgia,serif;font-size:14px;font-weight:400}
+/* letterhead */
+.letter{aspect-ratio:8.5/11;max-width:420px;margin:0 auto;background:#f6efe2;color:var(--ink);padding:7% 9%}
+.letter .head{display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:10px}
+.letter .head img{width:52px}
+.letter .head b{font-family:Georgia,serif;font-weight:400;font-size:18px;display:block}
+.letter .head span{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#6d5942}
+.letter .lines{margin-top:22px}
+.letter .lines i{display:block;height:7px;background:#e4dccc;border-radius:4px;margin:9px 0}
+.letter .lines i:nth-child(3){width:70%}.letter .lines i:nth-child(6){width:45%}
+.letter .lfoot{position:absolute;left:9%;right:9%;bottom:6%;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#6d5942;border-top:1px dashed #b39a75;padding-top:8px;display:flex;justify-content:space-between}
+/* business card 3.5x2 */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:640px;margin:0 auto}
+.bcard{aspect-ratio:3.5/2;border-radius:8px;padding:8%;display:flex;flex-direction:column;justify-content:center}
+.bcard.front{background:#14100c;align-items:center;text-align:center}
+.bcard.front img{width:38%}
+.bcard.front b{font-family:Georgia,serif;font-weight:400;font-size:clamp(13px,2.6vw,17px);margin-top:6px}
+.bcard.front span{font-size:clamp(7px,1.4vw,9px);letter-spacing:.22em;text-transform:uppercase;color:var(--brass);margin-top:4px}
+.bcard.back{background:var(--parch);color:var(--ink);flex-direction:row;align-items:center;gap:10px}
+.bcard.back img{width:34%;border:2px solid var(--ink);border-radius:4px}
+.bcard.back div{font-size:clamp(8px,1.6vw,11px);line-height:1.5}
+.bcard.back div b{font-family:Georgia,serif;font-weight:400;font-size:1.25em;display:block}
+@media (max-width:520px){.cards{grid-template-columns:1fr}}
+/* merch */
+.merch{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.mitem{background:var(--hide);border:1px solid var(--hideline);border-radius:12px;padding:14px;text-align:center}
+.mitem svg{width:100%;height:auto;display:block}
+.mitem h3{font-size:16px;margin-top:10px}
+.mitem p{font-size:12.5px;color:var(--smoke);margin-top:4px}
+.mitem .price{color:var(--brass);font-family:Georgia,serif;font-size:13px;margin-top:6px}
+footer{text-align:center;color:#6d5942;font-size:12px;padding:30px 20px;border-top:1px solid var(--hideline)}
+.ver{display:inline-block;border:1px solid #3a2c1f;border-radius:999px;padding:3px 10px;font-family:ui-monospace,Menlo,monospace;font-size:11px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Print and merch kit</h1>
+  <p>Bright Sword Artisan. Mockups for review; print files follow the domain and Jacob's sign-off on wording.</p>
+</header>
+<main>
+
+<div class="piece">
+  <h2>Booth banner</h2>
+  <div class="spec">6 ft x 3 ft vinyl, hemmed, grommets every 2 ft. Hangs on the back wall of the tent.</div>
+  <div class="mock banner">
+    <div class="stitch"></div>
+    <span class="grommet" style="left:1.5%;top:4%"></span><span class="grommet" style="right:1.5%;top:4%"></span><span class="grommet" style="left:1.5%;bottom:4%"></span><span class="grommet" style="right:1.5%;bottom:4%"></span><span class="grommet" style="left:48.5%;top:4%"></span>
+    <img src="bsa-logo.png" alt="">
+    <div><div class="t1 serif">Bright Sword Artisan</div><div class="t2 serif">Leather. Wood. Steel. Made by hand.</div><div class="t3">Massillon, Ohio &middot; custom orders welcome</div></div>
+  </div>
+  <p class="why">The reason for the banner: from twenty feet away, the tent has to say what he makes before anyone reads a price tag. Three words do it.</p>
+</div>
+
+<div class="piece">
+  <h2>Table card with the QR</h2>
+  <div class="spec">5 x 7 in, heavy matte stock, in an acrylic stand next to the pen case. Two copies, one per table.</div>
+  <div class="mock tent">
+    <div class="stitch"></div>
+    <div><div class="kick">Design your own</div><div class="t1 serif">Pen. Knife. Wallet.</div></div>
+    <img class="qr" src="bsa-qr-booth.png" alt="QR code to the booth page">
+    <div><div class="t2 serif">Scan, pick the parts, and hand Jacob the phone.</div><div class="t3">Built at the booth &middot; paid at the booth</div></div>
+  </div>
+  <p class="why">This is the piece that changes the booth. A buyer who is holding a knife and wondering about a longer blade can build the exact one on their own phone while standing there, then hand it over. The QR points at the temporary address for now; it gets reprinted once when the domain exists.</p>
+</div>
+
+<div class="piece">
+  <h2>Price board</h2>
+  <div class="spec">11 x 17 in, foam-core mounted, on an easel at buyer height. Replaces the printer-paper sheet.</div>
+  <div class="mock board">
+    <div class="stitch"></div>
+    <img src="bsa-logo-dark.png" alt="">
+    <div class="t1 serif">The board</div>
+    <div class="row"><span>Design-your-own bookmark</span><span class="dots"></span><b>$5</b></div>
+    <div class="row"><span>Straps</span><span class="dots"></span><b>$5</b></div>
+    <div class="row"><span>Minimalist wallet</span><span class="dots"></span><b>$15</b></div>
+    <div class="row"><span>Traveler's journal</span><span class="dots"></span><b>$25</b></div>
+    <div class="row"><span>Clutch</span><span class="dots"></span><b>$70</b></div>
+    <div class="row"><span>Pens, knives, bags</span><span class="dots"></span><b>per piece</b></div>
+    <div class="row"><span>Custom work</span><span class="dots"></span><b>quoted</b></div>
+    <div class="fine">If you can think of it, we can make it. Cash, PayPal, Cash App.</div>
+  </div>
+</div>
+
+<div class="piece">
+  <h2>Flyer</h2>
+  <div class="spec">8.5 x 11 in. Handed out at shows, pinned on the board at the leather supply, left at the coffee shop.</div>
+  <div class="mock flyer" style="display:flex;flex-direction:column">
+    <div class="top"><img src="bsa-logo.png" alt=""><div><div class="t1 serif">Bright Sword Artisan</div><div class="t2 serif">Hand-stitched leather, turned pens, knives in fitted sheaths</div></div></div>
+    <img class="photo" src="bsa-toolroll.jpg" alt="">
+    <div class="list"><span>Wallets and clutches</span><span>Bags, slings, duffels</span><span>Belts and straps</span><span>Hand-turned pens</span><span>Knives with sheaths</span><span>Tool rolls, custom work</span></div>
+    <div class="foot"><img src="bsa-qr-booth.png" alt=""><div><b>Design your own</b>Scan to build a pen, knife, or wallet<br>Massillon, Ohio &middot; find us on Facebook</div></div>
+  </div>
+</div>
+
+<div class="piece">
+  <h2>Letterhead</h2>
+  <div class="spec">8.5 x 11 in. For quotes, invoices, and the thank-you note that goes in every custom order box.</div>
+  <div class="mock letter">
+    <div class="head"><img src="bsa-logo-dark.png" alt=""><div><b>Bright Sword Artisan</b><span>Leather &middot; wood &middot; steel &middot; Massillon, Ohio</span></div></div>
+    <div class="lines"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="lfoot"><span>Facebook: Bright Sword Artisan</span><span>Cash &middot; PayPal &middot; Cash App</span></div>
+  </div>
+</div>
+
+<div class="piece">
+  <h2>Business card</h2>
+  <div class="spec">3.5 x 2 in, uncoated heavy stock. Front is the mark. Back is the QR and the one-line pitch.</div>
+  <div class="cards">
+    <div class="mock bcard front"><img src="bsa-logo.png" alt=""><b>Bright Sword Artisan</b><span>Massillon, Ohio</span></div>
+    <div class="mock bcard back"><img src="bsa-qr-booth.png" alt=""><div><b>Design your own</b>Pen, knife, or wallet.<br>Scan, build it, send it to Jacob.<br>Facebook: Bright Sword Artisan</div></div>
+  </div>
+</div>
+
+<div class="piece">
+  <h2>Merch</h2>
+  <div class="spec">Ideas to print in small runs. The shirt is the one to do first; he wears it at the booth and it sells the booth.</div>
+  <div class="merch">
+    <div class="mitem">
+      <svg viewBox="0 0 200 170" aria-hidden="true"><path d="M70 22 l-34 20 14 26 16 -9 v78 h68 v-78 l16 9 14 -26 -34 -20 a17 12 0 0 1 -60 0 z" fill="#14100c" stroke="#3a2c1f"/><circle cx="100" cy="78" r="22" fill="#efe3cf"/><text x="100" y="84" font-family="Georgia,serif" font-size="16" text-anchor="middle" fill="#14100c">BSA</text><text x="100" y="118" font-size="8" text-anchor="middle" fill="#c9973f" letter-spacing="2">MADE BY HAND</text></svg>
+      <h3>Booth shirt</h3><p>Black tee, parchment mark on the chest, "Made by hand" under it. Back: the mark large.</p><div class="price">12 to 24 pieces, screen printed</div>
+    </div>
+    <div class="mitem">
+      <svg viewBox="0 0 200 170" aria-hidden="true"><path d="M40 100 q0 -55 60 -55 q60 0 60 55 z" fill="#241c14" stroke="#3a2c1f"/><path d="M28 100 h144 q10 0 10 8 q0 6 -10 6 h-144 q-10 0 -10 -6 q0 -8 10 -8 z" fill="#14100c" stroke="#3a2c1f"/><circle cx="100" cy="82" r="14" fill="#efe3cf"/><text x="100" y="86" font-family="Georgia,serif" font-size="10" text-anchor="middle" fill="#14100c">BSA</text></svg>
+      <h3>Hat</h3><p>Unstructured cap, charred brown, the mark embroidered in parchment thread. Leather patch version if the embroidery blurs the small text.</p><div class="price">Leather patch is the on-brand upgrade</div>
+    </div>
+    <div class="mitem">
+      <svg viewBox="0 0 200 170" aria-hidden="true"><circle cx="100" cy="85" r="60" fill="#efe3cf" stroke="#c7b291" stroke-width="2"/><circle cx="100" cy="85" r="50" fill="#14100c"/><circle cx="100" cy="80" r="24" fill="#efe3cf"/><text x="100" y="86" font-family="Georgia,serif" font-size="16" text-anchor="middle" fill="#14100c">BSA</text><text x="100" y="118" font-size="7" text-anchor="middle" fill="#c9973f" letter-spacing="2">BRIGHT SWORD ARTISAN</text></svg>
+      <h3>Sticker</h3><p>3 in die-cut, one in every bag. The cheapest thing on the table that travels the farthest.</p><div class="price">Give away, never sell</div>
+    </div>
+    <div class="mitem">
+      <svg viewBox="0 0 200 170" aria-hidden="true"><rect x="45" y="50" width="110" height="100" rx="6" fill="#3a2c1f"/><path d="M70 50 q0 -30 30 -30 q30 0 30 30" fill="none" stroke="#3a2c1f" stroke-width="8"/><circle cx="100" cy="100" r="24" fill="#efe3cf"/><text x="100" y="106" font-family="Georgia,serif" font-size="16" text-anchor="middle" fill="#14100c">BSA</text></svg>
+      <h3>Canvas tote</h3><p>Sold at the booth for purchases too big for a bag. Brown canvas, one-color mark. Walks around the show as an ad.</p><div class="price">$12 at the booth, or free over $100</div>
+    </div>
+    <div class="mitem">
+      <svg viewBox="0 0 200 170" aria-hidden="true"><rect x="30" y="60" width="140" height="50" rx="4" fill="#5c3a24"/><rect x="30" y="60" width="140" height="50" rx="4" fill="none" stroke="#c9973f" stroke-dasharray="5 4"/><circle cx="60" cy="85" r="16" fill="#efe3cf"/><text x="60" y="90" font-family="Georgia,serif" font-size="11" text-anchor="middle" fill="#14100c">BSA</text><text x="92" y="82" font-family="Georgia,serif" font-size="11" fill="#efe3cf">Bright Sword</text><text x="92" y="96" font-size="6" fill="#c9973f" letter-spacing="1.5">MADE BY HAND</text></svg>
+      <h3>Leather maker's tag</h3><p>A stamped leather hang tag on every piece, mark on one side, care instructions on the other. He makes these himself; that is the point.</p><div class="price">Cost: scrap leather</div>
+    </div>
+    <div class="mitem">
+      <svg viewBox="0 0 200 170" aria-hidden="true"><rect x="40" y="40" width="120" height="90" rx="6" fill="#241c14" stroke="#3a2c1f"/><rect x="52" y="52" width="96" height="66" rx="3" fill="#efe3cf"/><text x="100" y="80" font-family="Georgia,serif" font-size="9" text-anchor="middle" fill="#14100c">Thank you.</text><text x="100" y="95" font-size="5.5" text-anchor="middle" fill="#6d5942">Made by hand in Massillon, Ohio</text><text x="100" y="106" font-size="5" text-anchor="middle" fill="#a3400f">Tell a friend · find us on Facebook</text></svg>
+      <h3>Thank-you insert</h3><p>Goes in every box. Care instructions on the back: conditioner, keep it dry, bring it back for repairs.</p><div class="price">Referral engine</div>
+    </div>
+  </div>
+</div>
+
+</main>
+<footer>Bright Sword Artisan kit &middot; mockups by Mot Buchanan &middot; <span class="ver">kit v1.0 &middot; Sep 24 2026</span></footer>
+</body>
+</html>

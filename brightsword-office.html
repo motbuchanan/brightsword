@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="build" content="office v3.0">
+<meta name="theme-color" content="#171310">
+<title>Bright Sword Back Office</title>
+<link rel="icon" type="image/png" href="bsa-logo.png">
+<style>
+:root{--coal:#171310;--coal2:#120f0c;--hide:#241c14;--hideline:#3a2c1f;--parch:#efe3cf;--ember:#ff7a2f;--emberdeep:#c9491a;--brass:#c9973f;--smoke:#a8917a;--ink:#241a10;--ok:#7fb069;--warn:#e0a13c}
+*{box-sizing:border-box;margin:0}
+html{scroll-padding-bottom:100px}
+body{background:var(--coal);color:var(--parch);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:84px;line-height:1.45}
+h1,h2,h3{font-family:Georgia,serif;font-weight:400}
+header{display:flex;align-items:center;gap:12px;padding:14px 16px 10px;border-bottom:1px solid var(--hideline);background:#14100c;position:sticky;top:0;z-index:5}
+header img{width:40px;height:40px}
+header h1{font-size:20px;line-height:1.1}
+header small{display:block;color:var(--smoke);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;font-family:system-ui,sans-serif}
+.ver{margin-left:auto;border:1px solid var(--hideline);border-radius:999px;padding:3px 9px;color:#8a7350;font-family:ui-monospace,Menlo,monospace;font-size:10.5px;white-space:nowrap}
+.banner{background:#3a1f12;border-bottom:1px solid var(--emberdeep);color:#ffd9bd;padding:10px 16px;font-size:13px;display:none}
+.banner.on{display:block}
+main{padding:14px 14px 20px;max-width:760px;margin:0 auto}
+.pane{display:none}.pane.on{display:block}
+.card{position:relative;background:var(--hide);border:1px solid var(--hideline);border-radius:14px;padding:14px;margin-top:12px}
+.card::before{content:"";position:absolute;inset:6px;border:1.5px dashed rgba(201,151,63,.38);border-radius:9px;pointer-events:none}
+.card>*{position:relative}
+.card h3{font-size:17px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row.between{justify-content:space-between}
+.muted{color:var(--smoke);font-size:12.5px}
+.big{font-family:Georgia,serif;font-size:26px;color:#ff9a52;text-shadow:0 0 14px rgba(255,122,47,.4)}
+.big.ok{color:var(--ok);text-shadow:none}.big.bad{color:#ff6a6a;text-shadow:none}
+label{display:block;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);margin:12px 0 6px}
+input,select,textarea{width:100%;background:#0f0c09;border:1px solid #4a3826;border-radius:10px;color:var(--parch);font:inherit;font-size:15px;padding:11px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ember);box-shadow:0 0 0 1px rgba(255,122,47,.35)}
+textarea{min-height:80px;resize:vertical}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+button{font:inherit;cursor:pointer;scroll-margin-bottom:100px}
+.btn{border:1px solid var(--brass);background:transparent;color:var(--parch);border-radius:10px;padding:11px 14px;font-family:Georgia,serif;font-size:15px;transition:border-color .15s,box-shadow .15s}
+.btn:active{border-color:var(--ember);box-shadow:0 0 12px rgba(255,122,47,.3)}
+.btn.ember{background:linear-gradient(180deg,var(--ember),var(--emberdeep));color:#14100c;border-color:transparent;font-weight:700}
+.btn.small{padding:7px 11px;font-size:13.5px}
+.btn.danger{border-color:#6a2a2a;color:#e8a0a0}
+.list .item{display:flex;gap:10px;align-items:center;padding:12px 4px;border-bottom:1px dashed #3a2c1f}
+.list .item:last-child{border-bottom:none}
+.list .item .t{flex:1;min-width:0}
+.list .item .t b{display:block;font-family:Georgia,serif;font-size:16px}
+.list .item .t span{display:block;color:var(--smoke);font-size:12.5px}
+.pill{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;border-radius:999px;padding:4px 9px;border:1px solid var(--hideline);color:var(--smoke);white-space:nowrap}
+.pill.booked,.pill.done,.pill.delivered{border-color:var(--ok);color:var(--ok)}
+.pill.applied,.pill.quoted,.pill.deposit{border-color:var(--warn);color:var(--warn)}
+.pill.progress{border-color:var(--ember);color:#ffb37f}
+.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:#14100c;border-top:1px solid var(--hideline);padding:6px 4px calc(6px + env(safe-area-inset-bottom));z-index:6}
+.tabs button{flex:1;background:none;border:none;color:var(--smoke);font-size:11px;letter-spacing:.06em;padding:8px 2px;border-radius:10px}
+.tabs button b{display:block;font-family:Georgia,serif;font-size:19px;color:var(--brass);line-height:1.1;margin-bottom:2px}
+.tabs button.on{color:var(--parch);background:rgba(255,122,47,.12)}
+.tabs button.on b{color:var(--ember)}
+.chk{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px dashed #3a2c1f;font-size:15px}
+.chk:last-child{border-bottom:none}
+.chk input{width:22px;height:22px;accent-color:var(--ember);flex:0 0 auto}
+.chk.done span{color:var(--smoke);text-decoration:line-through}
+.sale{display:grid;grid-template-columns:1fr 64px 74px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px dashed #3a2c1f}
+.sale span{font-size:14px}
+.sale .n{text-align:right;font-family:Georgia,serif;color:var(--brass)}
+.qty{display:flex;align-items:center;justify-content:space-between;background:#0f0c09;border:1px solid #4a3826;border-radius:10px}
+.qty button{background:none;border:none;color:var(--ember);font-size:20px;width:30px;padding:4px 0}
+.qty b{font-family:Georgia,serif;font-size:16px}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--brass);color:var(--coal);padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
+.toast.on{opacity:1}
+.tmpl{background:#0f0c09;border:1px solid #4a3826;border-radius:10px;padding:12px;font-size:14px;white-space:pre-wrap;color:#e6d6bc;margin-top:8px}
+.empty{color:var(--smoke);font-style:italic;font-family:Georgia,serif;padding:14px 4px;text-align:center}
+.total{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-top:1px solid var(--hideline);margin-top:6px}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.kpi div{background:#0f0c09;border:1px solid var(--hideline);border-radius:12px;padding:10px;text-align:center}
+.kpi div small{display:block;color:var(--smoke);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px}
+.kpi div b{font-family:Georgia,serif;font-size:19px;color:#ff9a52}
+
+/* ================= THE FORGE YEAR ================= */
+.tabs button{font-size:10.5px;padding:8px 0;letter-spacing:0}
+.tabs button b{font-size:17px}
+.qhead{display:flex;gap:12px;align-items:center;background:var(--hide);border:1px solid var(--hideline);border-radius:14px;padding:12px;margin-top:12px;position:relative}
+.qhead::before{content:"";position:absolute;inset:5px;border:1.5px dashed rgba(201,151,63,.35);border-radius:9px;pointer-events:none}
+.qhead>*{position:relative}
+.portrait{width:64px;height:64px;border-radius:50%;border:2px solid var(--brass);background:#0f0c09;overflow:hidden;flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+.portrait img{width:100%;height:100%;object-fit:cover}
+.portrait svg{width:70%;height:70%}
+.qname{font-family:Georgia,serif;font-size:18px;line-height:1.1}
+.qtitle{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);margin-top:2px}
+.xpbar{height:8px;background:#0f0c09;border:1px solid #3a2c1f;border-radius:6px;overflow:hidden;margin-top:8px}
+.xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--emberdeep),var(--ember));width:0;transition:width .6s ease}
+.xpline{display:flex;justify-content:space-between;font-size:11px;color:var(--smoke);margin-top:4px}
+.skills{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:10px}
+.skill{text-align:center;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--smoke)}
+.skill .pips{display:flex;justify-content:center;gap:3px;margin-bottom:4px}
+.skill .pips i{width:8px;height:8px;border-radius:50%;border:1px solid var(--brass);background:transparent}
+.skill .pips i.on{background:var(--brass);box-shadow:0 0 6px rgba(201,151,63,.6)}
+.dm{font-family:Georgia,serif;font-style:italic;color:#cdb99c;font-size:15px;line-height:1.45}
+.arcmap{margin-top:12px;background:#0f0c09;border:1px solid var(--hideline);border-radius:14px;padding:14px}
+.arcmap .arcname{font-family:Georgia,serif;font-size:17px}
+.arcmap .arcsub{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:10px}
+.road{position:relative;height:54px;margin:6px 4px 0}
+.road::before{content:"";position:absolute;left:0;right:0;top:26px;border-top:2px dashed rgba(201,151,63,.45)}
+.road .stop{position:absolute;top:18px;width:18px;height:18px;border-radius:50%;background:#241c14;border:2px solid var(--brass);transform:translateX(-50%)}
+.road .stop.done{background:var(--ember);border-color:var(--ember);box-shadow:0 0 10px rgba(255,122,47,.6)}
+.road .boss{position:absolute;right:-6px;top:10px;width:34px;height:34px;border-radius:8px;background:#2a1d10;border:2px solid var(--emberdeep);transform:rotate(45deg)}
+.road .boss.dead{opacity:.35}
+.road .boss b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transform:rotate(-45deg);color:#ff9a52;font-size:14px}
+/* cards */
+.hand{display:flex;gap:10px;overflow-x:auto;padding:12px 4px 16px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.hand .card{scroll-snap-align:center;flex:0 0 78%}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.card{position:relative;border-radius:12px;background:linear-gradient(180deg,#2a2016,#1a1410);border:1px solid #4a3826;box-shadow:0 10px 24px rgba(0,0,0,.5);overflow:hidden;display:flex;flex-direction:column;min-height:250px}
+.card::before{content:"";position:absolute;inset:5px;border:1.5px dashed rgba(201,151,63,.35);border-radius:8px;pointer-events:none;z-index:2}
+.card .art{height:96px;background:#0f0c09;position:relative;overflow:hidden;border-bottom:1px solid #4a3826}
+.card .art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.card .art svg{position:absolute;inset:0;width:100%;height:100%}
+.card .gem{position:absolute;top:8px;right:8px;width:14px;height:14px;transform:rotate(45deg);border:1px solid #0f0c09;z-index:3}
+.gem.common{background:#8a7350}.gem.uncommon{background:#7fb069}.gem.rare{background:#5aa7e8}.gem.mythic{background:linear-gradient(135deg,#ff7a2f,#e8a83b)}
+.card .body{padding:10px 11px 12px;flex:1;display:flex;flex-direction:column}
+.card .type{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass)}
+.card .title{font-family:Georgia,serif;font-size:15px;line-height:1.15;margin-top:3px;color:var(--parch)}
+.card .lore{font-family:Georgia,serif;font-style:italic;font-size:12px;color:#cdb99c;margin-top:6px;line-height:1.35}
+.card .task{font-size:12px;color:#e6d6bc;margin-top:7px;padding-top:7px;border-top:1px dashed #3a2c1f;line-height:1.35}
+.card .meta{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:8px;font-size:10.5px;color:var(--smoke)}
+.card .meta b{color:#ff9a52;font-family:Georgia,serif;font-size:13px}
+.card .act{display:flex;gap:6px;margin-top:8px}
+.card .act button{flex:1;font:inherit;font-size:12px;padding:8px 6px;border-radius:8px;border:1px solid var(--brass);background:transparent;color:var(--parch);cursor:pointer}
+.card .act button.go{background:linear-gradient(180deg,var(--ember),var(--emberdeep));color:#14100c;border-color:transparent;font-weight:700}
+.card.done{opacity:.55}
+.card.done .art::after{content:"\2713";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px;color:var(--ember);background:rgba(15,12,9,.55)}
+.card.foil{border-color:#e8a83b;box-shadow:0 0 0 1px rgba(232,168,59,.5),0 10px 24px rgba(0,0,0,.5)}
+.card.foil .art::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,240,200,.28) 48%,transparent 62%);z-index:1;pointer-events:none}
+.card.locked{filter:grayscale(1) brightness(.6)}
+.card.inhand{outline:2px solid var(--ember);outline-offset:-2px}
+.card .win{font-size:10px;color:var(--warn);margin-top:4px}
+.badge{display:inline-block;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--hideline);border-radius:999px;padding:3px 8px;color:var(--smoke);margin-right:4px}
+.badge.auto{border-color:#5aa7e8;color:#8fc7ff}.badge.photo{border-color:#e8a83b;color:#f2c14e}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.filters button{font:inherit;font-size:12px;padding:7px 11px;border-radius:999px;border:1px solid var(--hideline);background:transparent;color:var(--smoke);cursor:pointer}
+.filters button.on{border-color:var(--ember);color:#ffd9bd;background:rgba(255,122,47,.12)}
+/* boss */
+.bosscard{background:linear-gradient(180deg,#2a1810,#160f0b);border:1px solid var(--emberdeep);border-radius:14px;padding:14px;margin-top:12px;position:relative;overflow:hidden}
+.bosscard.dead{opacity:.6}
+.bosscard .bname{font-family:Georgia,serif;font-size:22px;color:#ff9a52}
+.bosscard .bsub{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass)}
+.hp{display:flex;gap:4px;margin:10px 0}
+.hp i{flex:1;height:12px;background:#a3400f;border:1px solid #5c1f0a;border-radius:3px}
+.hp i.gone{background:#2a1d10}
+.bstep{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px dashed #3a2c1f;font-size:13.5px}
+.bstep:last-child{border-bottom:none}
+.bstep .t{flex:1}.bstep .t i{display:block;font-family:Georgia,serif;color:#cdb99c;font-size:12.5px}
+.bstep button{font:inherit;font-size:12px;padding:7px 10px;border-radius:8px;border:1px solid var(--brass);background:transparent;color:var(--parch)}
+.bstep.hit .t{color:var(--smoke);text-decoration:line-through}
+.strike{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 40%,rgba(255,160,80,.55),transparent 55%);opacity:0}
+.strike.on{animation:strike .5s ease-out}
+@keyframes strike{0%{opacity:1;transform:scale(.6)}100%{opacity:0;transform:scale(1.6)}}
+/* overlays */
+.ov{position:fixed;inset:0;z-index:80;background:#0a0806;display:none;overflow:auto}
+.ov.on{display:block}
+.ov .in{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:34px 22px;text-align:center}
+.reveal{background:var(--coal);}
+.reveal .card{max-width:270px;width:78%;margin:14px auto;animation:flip .7s cubic-bezier(.2,.9,.3,1)}
+@keyframes flip{0%{transform:rotateY(90deg) scale(.8);opacity:0}100%{transform:none;opacity:1}}
+.reveal h2{font-family:Georgia,serif;font-size:26px}
+.reveal .xpup{font-family:Georgia,serif;font-size:40px;color:#ff9a52;text-shadow:0 0 22px rgba(255,122,47,.6)}
+/* opening */
+#opening .coal{width:6px;height:6px;border-radius:50%;background:#ff8a3c;box-shadow:0 0 14px 4px rgba(255,122,47,.8);animation:emberpulse 1.6s ease-in-out infinite}
+@keyframes emberpulse{0%,100%{transform:scale(.7);opacity:.6}50%{transform:scale(1.3);opacity:1}}
+#opening .anvilwrap{position:relative;width:min(300px,76vw);margin:18px auto 0}
+#opening .anvilsvg{width:100%;height:auto;display:block;filter:drop-shadow(0 12px 18px rgba(0,0,0,.6))}
+#opening .anvilwrap.shake{animation:shake .32s ease-out}
+@keyframes shake{0%{transform:translate(0px,0px)}25%{transform:translate(-3px,2px)}50%{transform:translate(3px,-1px)}75%{transform:translate(-2px,1px)}100%{transform:translate(0px,0px)}}
+#opening .flash{position:absolute;left:50%;top:60%;width:60%;height:50%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,200,120,.95),rgba(255,122,47,.35) 40%,rgba(255,122,47,0) 70%);opacity:0;pointer-events:none}
+#opening .flash.on{animation:flashout .45s ease-out}
+@keyframes flashout{0%{opacity:1;transform:translate(-50%,-50%) scale(.5)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.6)}}
+#opening .hotline.on{animation:hotfade 1.1s ease-out}
+@keyframes hotfade{0%{opacity:1}100%{opacity:0}}
+#opening .hammer{transform-box:fill-box;transform-origin:100% 0%;transform:rotate(58deg)}
+#opening .hammer.drop{animation:drop .36s cubic-bezier(.6,0,.9,.4) forwards}
+@keyframes drop{0%{transform:rotate(58deg)}100%{transform:rotate(0deg)}}
+#opening .hammer.lift{animation:lift .56s cubic-bezier(.2,.6,.3,1) forwards}
+@keyframes lift{0%{transform:rotate(0deg)}18%{transform:rotate(7deg)}100%{transform:rotate(58deg)}}
+#opening .sparks{position:absolute;left:50.5%;top:60%;width:0;height:0;pointer-events:none}
+#opening .sparks span{position:absolute;width:3px;height:3px;border-radius:50%;background:#ffc27a;box-shadow:0 0 6px 1px rgba(255,160,80,.9);opacity:0}
+#opening .sparks.go span{animation:spark .75s cubic-bezier(.1,.8,.3,1) forwards}
+@keyframes spark{0%{opacity:1;transform:translate(0px,0px) scale(1.2)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.4)}}
+#opening h1{font-family:Georgia,serif;font-size:clamp(34px,10vw,58px);letter-spacing:.06em;color:var(--parch);margin-top:22px;opacity:0;text-shadow:0 0 30px rgba(255,122,47,.7);clip-path:inset(0 50% 0 50%)}
+#opening h1.burn{animation:burn 1.4s ease forwards}
+@keyframes burn{0%{opacity:0;clip-path:inset(0 50% 0 50%)}30%{opacity:1}100%{opacity:1;clip-path:inset(0 0 0 0)}}
+#opening .sub{margin-top:10px;color:#cdb99c;font-family:Georgia,serif;font-style:italic;font-size:16px;opacity:0;transition:opacity .8s}
+#opening .sub.on{opacity:1}
+#opening .d20{width:120px;height:120px;margin:26px auto 0;position:relative;opacity:0;transition:opacity .6s;cursor:pointer}
+#opening .d20.on{opacity:1}
+#opening .d20 svg{width:100%;height:100%;filter:drop-shadow(0 0 16px rgba(255,122,47,.45))}
+#opening .d20.roll svg{animation:tumble 1.2s cubic-bezier(.2,.9,.3,1)}
+@keyframes tumble{0%{transform:rotate(0deg) scale(1)}50%{transform:rotate(540deg) scale(1.2)}100%{transform:rotate(720deg) scale(1)}}
+#opening .d20 b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:40px;color:var(--parch)}
+#opening .rollhint{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--brass);margin-top:10px;opacity:0;transition:opacity .6s}
+#opening .rollhint.on{opacity:1}
+#opening .result{margin-top:14px;font-family:Georgia,serif;font-style:italic;color:#cdb99c;min-height:44px}
+#opening .btn{margin-top:18px;display:none}
+#opening .btn.on{display:inline-block}
+@media (prefers-reduced-motion:reduce){#opening .hammer.drop,#opening .hammer.lift,#opening .coal,#opening .d20.roll svg,#opening .anvilwrap.shake,#opening .flash.on{animation:none}#opening .hammer{transform:rotate(0deg)}#opening h1{opacity:1;clip-path:none}}
+/* session zero */
+.zero .prompt{font-family:Georgia,serif;font-size:20px;line-height:1.25}
+.zero .plain{font-size:13px;color:var(--smoke);margin-top:6px}
+.zero textarea{min-height:100px}
+.zero .step{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);margin-bottom:8px}
+.journal .item .t b{font-size:14px}
+
+
+.arm{position:relative}
+.arm .unl{font-size:11px;color:var(--warn);margin-top:6px}
+.arm .act button.go{background:linear-gradient(180deg,var(--brass),#8a6a2a)}
+#forgePreview svg{width:100%;height:auto;display:block}
+
+</style>
+</head>
+<body>
+<header>
+  <img src="bsa-logo.png" alt="">
+  <div><h1>Back Office</h1><small>Bright Sword Artisan</small></div>
+  <span class="ver">office v3.0 &middot; Sep 25 2026</span>
+</header>
+<div class="banner" id="storeBanner">This copy cannot save. Open the app from its web address (not from Downloads) so your entries keep. Until then, use <b>Save backup</b> on the Office tab after every session.</div>
+
+<main>
+<!-- ================= QUEST ================= -->
+<div class="pane" id="p-quest">
+  <div class="filters qpills" style="margin:10px 0 0"><button data-pane="quest" class="on">Hand</button><button data-pane="bosses" class="">Bosses</button><button data-pane="journal" class="">Journal</button></div>
+  <div class="qhead">
+    <div class="portrait" id="qPortrait"></div>
+    <div style="flex:1;min-width:0">
+      <div class="qname" id="qName">Jacob, Artisan</div>
+      <div class="qtitle" id="qTitle">Level 1 &middot; Apprentice</div>
+      <div class="xpbar"><i id="qXp"></i></div>
+      <div class="xpline"><span id="qXpTxt">0 XP</span><span id="qNext">200 to next</span></div>
+    </div>
+  </div>
+  <div class="skills" id="qSkills"></div>
+  <div class="card" style="margin-top:12px;min-height:0;padding:0"><div class="body"><div class="type">The Dungeon Master</div><div class="dm" id="dmLine"></div></div></div>
+  <div class="arcmap" id="arcMap"></div>
+  <div class="row between" style="margin-top:16px"><h3>This week's hand</h3><span class="muted" id="handInfo"></span></div>
+  <div class="hand" id="handHost"></div>
+  <div class="row" id="handActions"></div>
+</div>
+
+<!-- ================= CARDS / LIBRARY ================= -->
+<div class="pane" id="p-library">
+  <div class="filters qpills" style="margin:10px 0 0"><button data-pane="library" class="on">Library</button><button data-pane="armory" class="">Armory</button><button data-pane="herald" class="">Herald</button></div>
+  <div class="card" style="min-height:0"><div class="body"><div class="type">The library</div><div class="dm">Every card you have unlocked. Tap a quest to add it to this week's hand. Foil cards are quests you have finished twice.</div></div></div>
+  <div class="filters" id="libFilters">
+    <button class="on" data-lf="all">All</button><button data-lf="quest">Quests</button><button data-lf="ability">Abilities</button><button data-lf="artifact">Artifacts</button>
+    <button data-lf="smith">Smith</button><button data-lf="chronicler">Chronicler</button><button data-lf="quartermaster">Quartermaster</button><button data-lf="scout">Scout</button><button data-lf="merchant">Merchant</button>
+  </div>
+  <div class="cards" id="libHost"></div>
+</div>
+
+
+<!-- ================= ARMORY ================= -->
+<div class="pane" id="p-armory">
+  <div class="filters qpills" style="margin:10px 0 0"><button data-pane="library" class="">Library</button><button data-pane="armory" class="on">Armory</button><button data-pane="herald" class="">Herald</button></div>
+  <div class="card" style="min-height:0"><div class="body"><div class="type">The armory</div><div class="dm">Every piece of gear the booth needs, earned by doing the work. Unlocked pieces open at the forge: pick the layout, the colors, the words. Send the design to Mot; he turns it into the print-ready file and sends it back. You order the printing wherever you like.</div></div></div>
+  <div class="cards" id="armoryHost"></div>
+</div>
+
+<!-- ================= HERALD ================= -->
+<div class="pane" id="p-herald">
+  <div class="filters qpills" style="margin:10px 0 0"><button data-pane="library" class="">Library</button><button data-pane="armory" class="">Armory</button><button data-pane="herald" class="on">Herald</button></div>
+  <div class="card" style="min-height:0"><div class="body"><div class="type">The herald</div><div class="dm">A finished post in a minute. Pick the shape, pick a photo from your phone, say one line. Download and post.</div></div></div>
+  <div class="filters" id="heraldTpl"></div>
+  <div class="card" style="min-height:0"><div class="body">
+    <label>Photo</label><div class="row"><button class="btn small" id="hPick">Choose a photo</button><span class="muted" id="hPickName">none yet (the mark on charred leather is used)</span></div>
+    <label>Kicker</label><input id="hKick" placeholder="Find the booth">
+    <label>Headline (two short lines)</label><input id="hTitle" placeholder="Saturday at the show">
+    <label>Under it</label><input id="hSub" placeholder="Holiday craft show, Massillon, 9a to 3p">
+    <label>Footer</label><input id="hFoot" placeholder="Bright Sword Artisan · Massillon, Ohio">
+    <div class="row" style="margin-top:12px"><button class="btn ember" id="hRender">Render</button><button class="btn" id="hDownload">Download PNG</button><button class="btn small" id="hStory">Story size</button></div>
+  </div></div>
+  <div class="card" style="min-height:0;padding:10px"><canvas id="hCanvas" width="1080" height="1080" style="width:100%;height:auto;border-radius:10px;display:block"></canvas></div>
+</div>
+
+<!-- ================= BOSSES ================= -->
+<div class="pane" id="p-bosses">
+  <div class="filters qpills" style="margin:10px 0 0"><button data-pane="quest" class="">Hand</button><button data-pane="bosses" class="on">Bosses</button><button data-pane="journal" class="">Journal</button></div>
+  <div id="bossHost"></div>
+</div>
+
+<!-- ================= JOURNAL ================= -->
+<div class="pane" id="p-journal">
+  <div class="filters qpills" style="margin:10px 0 0"><button data-pane="quest" class="">Hand</button><button data-pane="bosses" class="">Bosses</button><button data-pane="journal" class="on">Journal</button></div>
+  <div class="card" style="min-height:0"><div class="body"><div class="type">The journal</div><div class="dm" id="journalDm"></div></div></div>
+  <div class="kpi" id="journalKpi"></div>
+  <div class="card" style="min-height:0"><div class="body"><div class="row"><button class="btn small" id="raven">Send a raven to Mot</button><button class="btn small" id="replayOpening">Replay the opening</button></div></div></div>
+  <div class="list journal" id="journalHost"></div>
+</div>
+
+<!-- ================= SHOWS ================= -->
+<div class="pane on" id="p-shows">
+  <div class="kpi" id="showKpi"></div>
+  <div class="card">
+    <h3>Add a show</h3>
+    <div class="g2"><div><label>Date</label><input type="date" id="s-date"></div><div><label>Status</label><select id="s-status"><option value="idea">Idea</option><option value="applied">Applied</option><option value="booked" selected>Booked</option></select></div></div>
+    <label>Show name</label><input id="s-name" placeholder="Holiday craft show">
+    <div class="g2"><div><label>City</label><input id="s-city" placeholder="Massillon"></div><div><label>Hours</label><input id="s-hours" placeholder="9a-3p"></div></div>
+    <div class="g2"><div><label>Booth fee $</label><input type="number" id="s-fee" inputmode="decimal" placeholder="45"></div><div><label>Round trip miles</label><input type="number" id="s-miles" inputmode="decimal" placeholder="30"></div></div>
+    <label>Notes (load-in door, table size, power, contact)</label><textarea id="s-notes"></textarea>
+    <div class="row" style="margin-top:12px"><button class="btn ember" id="s-add">Add show</button><button class="btn small" id="s-cancel" style="display:none">Cancel edit</button></div>
+  </div>
+  <div class="card"><h3>Upcoming</h3><div class="list" id="showList"></div></div>
+  <div class="card"><h3>Past shows</h3><div class="list" id="showPast"></div></div>
+</div>
+
+<!-- ================= BOOTH LOG ================= -->
+<div class="pane" id="p-log">
+  <div class="card">
+    <h3>Booth log</h3>
+    <label>Which show</label><select id="l-show"></select>
+    <div class="muted" style="margin-top:6px">Tap plus as things sell. Prices come from the board; change a price for the day if you ran a deal.</div>
+    <div id="saleRows" style="margin-top:10px"></div>
+    <div class="row" style="margin-top:10px"><input id="l-custom-name" placeholder="Custom piece (pen, knife, bag)" style="flex:2"><input id="l-custom-price" type="number" inputmode="decimal" placeholder="$" style="flex:1"><button class="btn small" id="l-custom-add">Add</button></div>
+    <div class="total"><span class="muted">Sales today</span><span class="big" id="l-total">$0</span></div>
+    <div class="g3"><div><label>Cash $</label><input type="number" inputmode="decimal" id="l-cash"></div><div><label>PayPal $</label><input type="number" inputmode="decimal" id="l-paypal"></div><div><label>Cash App $</label><input type="number" inputmode="decimal" id="l-cashapp"></div></div>
+    <div class="g2"><div><label>Weather</label><input id="l-weather" placeholder="Sunny, 70"></div><div><label>Foot traffic</label><select id="l-traffic"><option>Slow</option><option selected>Steady</option><option>Busy</option><option>Slammed</option></select></div></div>
+    <label>What people asked for that you didn't have</label><textarea id="l-asked"></textarea>
+    <label>Notes</label><textarea id="l-notes"></textarea>
+    <div class="row" style="margin-top:12px"><button class="btn ember" id="l-save">Save log</button></div>
+  </div>
+</div>
+
+<!-- ================= P&L ================= -->
+<div class="pane" id="p-pl">
+  <div class="card">
+    <h3>Event profit and loss</h3>
+    <label>Show</label><select id="pl-show"></select>
+    <div class="muted">Revenue pulls from the booth log. Costs are yours to enter.</div>
+    <div class="g2"><div><label>Booth fee $</label><input type="number" inputmode="decimal" id="pl-fee"></div><div><label>Mileage rate $/mi</label><input type="number" inputmode="decimal" id="pl-rate" value="0.70"></div></div>
+    <div class="g2"><div><label>Round trip miles</label><input type="number" inputmode="decimal" id="pl-miles"></div><div><label>Materials sold $ (cost)</label><input type="number" inputmode="decimal" id="pl-mat"></div></div>
+    <div class="g2"><div><label>Food, lodging $</label><input type="number" inputmode="decimal" id="pl-other"></div><div><label>Hours worked (incl. drive)</label><input type="number" inputmode="decimal" id="pl-hours"></div></div>
+    <div class="row" style="margin-top:12px"><button class="btn ember" id="pl-save">Save costs</button></div>
+    <div class="kpi" id="plKpi"></div>
+    <div class="tmpl" id="plSheet" style="margin-top:12px"></div>
+  </div>
+  <div class="card"><h3>Season so far</h3><div class="kpi" id="seasonKpi"></div><div class="list" id="seasonList"></div></div>
+</div>
+
+<!-- ================= ORDERS ================= -->
+<div class="pane" id="p-orders">
+  <div class="card">
+    <h3>Custom order</h3>
+    <div class="g2"><div><label>Customer</label><input id="o-name" placeholder="Name"></div><div><label>Contact</label><input id="o-contact" placeholder="Phone, FB, email"></div></div>
+    <label>Piece and spec (paste the build from the site)</label><textarea id="o-spec" placeholder="Custom knife&#10;Blade: 4 inch&#10;Steel: Damascus..."></textarea>
+    <div class="g3"><div><label>Quote $</label><input type="number" inputmode="decimal" id="o-quote"></div><div><label>Deposit $</label><input type="number" inputmode="decimal" id="o-deposit"></div><div><label>Due</label><input type="date" id="o-due"></div></div>
+    <label>Status</label><select id="o-status"><option value="quoted">Quoted</option><option value="deposit">Deposit paid</option><option value="progress">In progress</option><option value="done">Done, awaiting pickup</option><option value="delivered">Delivered</option></select>
+    <div class="row" style="margin-top:12px"><button class="btn ember" id="o-add">Save order</button><button class="btn small" id="o-cancel" style="display:none">Cancel edit</button></div>
+  </div>
+  <div class="card"><h3>Open orders</h3><div class="list" id="orderList"></div></div>
+  <div class="card">
+    <h3>Message templates</h3>
+    <div class="muted">Pick an order above, then tap a template. It fills in their name, piece, and price. Copy and paste into Messenger.</div>
+    <div class="row" style="margin-top:10px">
+      <button class="btn small" data-tmpl="quote">Quote reply</button><button class="btn small" data-tmpl="deposit">Deposit received</button>
+      <button class="btn small" data-tmpl="ready">Ready for pickup</button><button class="btn small" data-tmpl="followup">After the show</button>
+      <button class="btn small" data-tmpl="show">Next show reminder</button>
+    </div>
+    <div class="tmpl" id="tmplOut">Pick a template.</div>
+    <div class="row" style="margin-top:8px"><button class="btn" id="tmplCopy">Copy message</button></div>
+  </div>
+</div>
+
+<!-- ================= CHECKLISTS ================= -->
+<div class="pane" id="p-lists">
+  <div class="card"><div class="row between"><h3>Load-out (night before)</h3><button class="btn small" data-reset="load">Reset</button></div><div id="ck-load"></div></div>
+  <div class="card"><div class="row between"><h3>Setup (in this order)</h3><button class="btn small" data-reset="setup">Reset</button></div><div id="ck-setup"></div></div>
+  <div class="card"><div class="row between"><h3>Breakdown</h3><button class="btn small" data-reset="down">Reset</button></div><div id="ck-down"></div></div>
+  <div class="card"><h3>Add your own item</h3><div class="row"><select id="ck-which" style="flex:1"><option value="load">Load-out</option><option value="setup">Setup</option><option value="down">Breakdown</option></select><input id="ck-text" placeholder="Extra extension cord" style="flex:2"><button class="btn small" id="ck-add">Add</button></div></div>
+</div>
+
+<!-- ================= OFFICE ================= -->
+<div class="pane" id="p-office">
+  <div class="card">
+    <h3>Backup</h3>
+    <div class="muted">Everything lives on this phone. Save a backup file after every show; load it on a new phone to move over.</div>
+    <div class="row" style="margin-top:12px"><button class="btn ember" id="bk-save">Save backup</button><button class="btn" id="bk-load">Load backup</button><input type="file" id="bk-file" accept=".json" style="display:none"></div>
+    <div class="row" style="margin-top:8px"><button class="btn" id="csv-shows">Export shows CSV</button><button class="btn" id="csv-sales">Export sales CSV</button></div>
+  </div>
+  <div class="card">
+    <h3>The board (your prices)</h3>
+    <div class="muted">These feed the booth log. Edit here when a price changes.</div>
+    <div id="priceEdit"></div>
+    <div class="row" style="margin-top:10px"><input id="pe-name" placeholder="New item" style="flex:2"><input id="pe-price" type="number" inputmode="decimal" placeholder="$" style="flex:1"><button class="btn small" id="pe-add">Add</button></div>
+  </div>
+  <div class="card">
+    <h3>Site notes</h3>
+    <div class="muted">Your site is at motbuchanan.github.io/brightsword/. The booth card QR opens booth.html. Changes to the site go through Mot until handoff.</div>
+  </div>
+  <div class="card"><h3>Danger zone</h3><div class="row"><button class="btn danger small" id="wipe">Erase everything on this phone</button></div></div>
+</div>
+</main>
+
+<div class="tabs">
+  <button data-pane="quest"><b>&#9876;&#xFE0E;</b>Quest</button>
+  <button data-pane="library"><b>&#9830;&#xFE0E;</b>Cards</button>
+  <button class="on" data-pane="shows"><b>&#9670;&#xFE0E;</b>Shows</button>
+  <button data-pane="log"><b>&#8942;&#xFE0E;</b>Log</button>
+  <button data-pane="pl"><b>$</b>P&amp;L</button>
+  <button data-pane="orders"><b>&#9997;&#xFE0E;</b>Orders</button>
+  <button data-pane="lists"><b>&#10003;&#xFE0E;</b>Lists</button>
+  <button data-pane="office"><b>&#9881;&#xFE0E;</b>Office</button>
+</div>
+
+<div class="ov" id="opening"><div class="in">
+  <div class="coal"></div>
+  <div class="anvilwrap" id="anvilwrap">
+    <div class="flash" id="flash"></div>
+    <svg class="anvilsvg" viewBox="0 -70 240 240" aria-hidden="true">
+      <defs>
+        <linearGradient id="steel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a6560"/><stop offset=".35" stop-color="#3e3a36"/><stop offset="1" stop-color="#1f1c19"/></linearGradient>
+        <linearGradient id="steelTop" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a847d"/><stop offset="1" stop-color="#5a5550"/></linearGradient>
+        <linearGradient id="hot" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff7a2f" stop-opacity="0"/><stop offset=".5" stop-color="#ff9a52" stop-opacity=".9"/><stop offset="1" stop-color="#ff7a2f" stop-opacity="0"/></linearGradient>
+      </defs>
+      <ellipse cx="120" cy="158" rx="78" ry="7" fill="#000" opacity=".45"/>
+      <path d="M66 146 h108 l6 10 h-120 z" fill="#2a2724"/>
+      <path d="M78 122 h84 l8 24 h-100 z" fill="url(#steel)"/>
+      <path d="M96 100 h48 l10 22 h-68 z" fill="#2e2a27"/>
+      <path d="M40 78 h150 q10 0 10 8 v10 q0 6 -8 6 h-152 q-6 0 -6 -6 v-8 z" fill="url(#steel)"/>
+      <path d="M6 88 q14 -18 40 -12 v22 h-40 q-6 -4 0 -10 z" fill="url(#steel)"/>
+      <path d="M46 76 h146 q6 0 8 4 h-160 q2 -4 6 -4 z" fill="url(#steelTop)"/>
+      <path d="M190 78 h8 v6 h-8 z" fill="#8a847d"/>
+      <rect class="hotline" x="46" y="75" width="150" height="3" fill="url(#hot)" opacity="0"/>
+      <g class="hammer">
+        <line x1="204" y1="18" x2="132" y2="66" stroke="#7a5a2a" stroke-width="9" stroke-linecap="round"/>
+        <line x1="204" y1="18" x2="132" y2="66" stroke="#a37a3a" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+        <g transform="rotate(-34 122 70)"><rect x="102" y="56" width="40" height="28" rx="4" fill="#4a4642"/><rect x="102" y="56" width="40" height="8" rx="3" fill="#7a746e"/><rect x="118" y="56" width="8" height="28" fill="#2f2c29" opacity=".6"/></g>
+      </g>
+    </svg>
+    <div class="sparks" id="sparks"></div>
+  </div>
+  <h1 id="openTitle">THE FORGE YEAR</h1>
+  <div class="sub" id="openSub">A campaign for the Artisan of the Bright Sword.</div>
+  <div class="d20" id="d20"><svg viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,4 92,28 92,72 50,96 8,72 8,28" fill="#241c14" stroke="#c9973f" stroke-width="2.5"/><polygon points="50,22 76,64 24,64" fill="none" stroke="#c9973f" stroke-width="1.5"/><path d="M50 4 L50 22 M92 28 L76 64 M8 28 L24 64 M92 72 L76 64 M8 72 L24 64 M50 96 L76 64 M50 96 L24 64" stroke="#c9973f" stroke-width="1.2" fill="none"/></svg><b id="d20n"></b></div>
+  <div class="rollhint" id="rollHint">Roll for initiative</div>
+  <div class="result" id="rollResult"></div>
+  <button class="btn ember" id="openBegin">Begin</button>
+</div></div>
+
+<div class="ov zero" id="zero"><div class="in" style="justify-content:flex-start;text-align:left;align-items:stretch;max-width:560px;margin:0 auto">
+  <div class="step" id="zeroStep"></div>
+  <div class="prompt" id="zeroPrompt"></div>
+  <div class="plain" id="zeroPlain"></div>
+  <textarea id="zeroInput" style="margin-top:14px"></textarea>
+  <div class="row" style="margin-top:12px"><button class="btn ember" id="zeroNext">Speak it</button><button class="btn" id="zeroLater">Later</button></div>
+</div></div>
+
+
+<div class="ov" id="forge"><div class="in" style="justify-content:flex-start;align-items:stretch;max-width:600px;margin:0 auto;text-align:left">
+  <div class="row between"><div><div class="type" style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--brass)">At the forge</div><h2 id="forgeName" style="font-family:Georgia,serif;font-size:24px"></h2></div><button class="btn small" id="forgeClose">Close</button></div>
+  <div id="forgePreview" style="margin-top:12px;background:#0f0c09;border:1px solid var(--hideline);border-radius:12px;padding:10px"></div>
+  <label>Layout</label><div class="filters" id="forgeLayout"><button data-fl="a" class="on">Mark</button><button data-fl="b">Mark and name</button><button data-fl="c">Name</button></div>
+  <label>Ground</label><div class="filters" id="forgeGround"><button data-fg="coal" class="on">Charred</button><button data-fg="parch">Parchment</button><button data-fg="ember">Ember</button></div>
+  <label>Line</label><select id="forgeLine"></select>
+  <input id="forgeCustom" placeholder="Or write your own line" style="margin-top:8px">
+  <div class="row" style="margin-top:14px"><button class="btn ember" id="forgeSave">Save design</button><button class="btn" id="forgePng">Download PNG</button><button class="btn" id="forgeSend">Send design to Mot</button></div>
+  <div class="muted" style="margin-top:10px">Mot makes the print file from this and sends it back. You order the printing yourself, any shop or site.</div>
+  <div class="tmpl" id="forgeSpec" style="display:none"></div>
+</div></div>
+
+<div class="ov reveal" id="reveal"><div class="in">
+  <div class="type" style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--brass)" id="revealKick"></div>
+  <h2 id="revealTitle"></h2>
+  <div class="xpup" id="revealXp"></div>
+  <div id="revealCard"></div>
+  <div class="dm" id="revealDm" style="max-width:420px"></div>
+  <button class="btn ember" id="revealOk" style="margin-top:18px">Onward</button>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+var KEY = "bsa-office-v1";
+var D = null;
+var DEFAULT_PRICES = [["Bookmark",5],["Strap",5],["Minimalist wallet",15],["Traveler's journal",25],["Clutch",70]];
+var DEFAULT_LISTS = {
+  load:["Tent, weights, sidewalls","Tables (2) and black covers","Display tower and slat panels","Pen case and journal crate","Belt rack and hooks","Cash box with change ($100 in small bills)","Card reader / phone charged / battery pack","Booth QR card and price board","Bags, tissue, business cards","Tools: pliers, extra snaps, thread, needle, leather conditioner","Chair, water, snacks, sunscreen","Tape, zip ties, scissors, marker"],
+  setup:["Park, check in, find the space","Tent up first, weights on every leg","Tables in, covers on, level the tower","Tower loaded: journals top, clutches mid, wallets low","Pen case open at eye level, front left","Knives on the black mat, sheathed, priced","Belts hung on the rack, longest at the back","Price board and QR card where a buyer stands","Cash box hidden, reader tested with one $1 sale","Photo of the finished booth for social","Walk to the aisle and look at it as a stranger"],
+  down:["Count the cash box before anything moves","Log sales in the app while it is fresh","Pens and knives packed first (small, valuable)","Leather goods into bins by type","Tower panels off, folded, strapped","Tables and covers","Tent last, dry it at home if wet","Sweep the space, check under tables","Text the organizer a thank you"]
+};
+function esc(t){ return String(t==null?"":t).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+function $(id){ return document.getElementById(id); }
+function money(n){ return "$"+(Math.round(Number(n||0)*100)/100).toLocaleString(); }
+function uid(){ return Math.random().toString(36).slice(2,9); }
+function toast(m){ var t=$("toast"); t.textContent=m; t.classList.add("on"); clearTimeout(t._h); t._h=setTimeout(function(){ t.classList.remove("on"); },1800); }
+function fresh(){ return { shows:[], logs:{}, costs:{}, orders:[], prices:DEFAULT_PRICES.map(function(p){return {name:p[0],price:p[1]};}), lists:{load:[],setup:[],down:[]}, checks:{} }; }
+
+/* ---------- storage with probe (Downloads / content:// copies cannot persist) ---------- */
+var CAN_STORE = false;
+(function(){
+  try{ localStorage.setItem("__probe","1"); CAN_STORE = localStorage.getItem("__probe")==="1"; localStorage.removeItem("__probe"); }catch(e){ CAN_STORE=false; }
+  if (!CAN_STORE || location.protocol==="file:" || location.protocol==="content:") $("storeBanner").classList.add("on");
+  try{ var raw = localStorage.getItem(KEY); D = raw ? JSON.parse(raw) : fresh(); }catch(e){ D = fresh(); }
+  if (!D.lists) D.lists={load:[],setup:[],down:[]}; if(!D.checks) D.checks={}; if(!D.costs) D.costs={}; if(!D.logs) D.logs={};
+})();
+function saveCore(){ try{ localStorage.setItem(KEY, JSON.stringify(D)); }catch(e){} }
+function save(){ saveCore(); if (window.questCheck) questCheck(); }
+
+/* ---------- shows ---------- */
+var editingShow = null;
+function showById(id){ for (var i=0;i<D.shows.length;i++) if (D.shows[i].id===id) return D.shows[i]; return null; }
+function fmtDate(s){ if(!s) return "no date"; var p=s.split("-"); return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][Number(p[1])-1]+" "+Number(p[2])+" "+p[0]; }
+function todayISO(){ var d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function renderShows(){
+  var sorted = D.shows.slice().sort(function(a,b){ return (a.date||"").localeCompare(b.date||""); });
+  var t = todayISO(), up="", past="", booked=0, fees=0;
+  for (var i=0;i<sorted.length;i++){
+    var s=sorted[i]; if (s.status==="booked"){ booked++; fees+=Number(s.fee||0); }
+    var row = '<div class="item"><div class="t"><b>'+esc(s.name||"Untitled")+'</b><span>'+fmtDate(s.date)+' &middot; '+esc(s.city||"")+' &middot; '+esc(s.hours||"")+(s.fee?' &middot; fee '+money(s.fee):'')+'</span>'+(s.notes?'<span>'+esc(s.notes)+'</span>':'')+'</div>'
+            + '<span class="pill '+esc(s.status)+'">'+esc(s.status)+'</span><button class="btn small" data-edit-show="'+s.id+'">Edit</button></div>';
+    if ((s.date||"9999") >= t) up += row; else past += row;
+  }
+  $("showList").innerHTML = up || '<div class="empty">Nothing booked yet. Add the next show above.</div>';
+  $("showPast").innerHTML = past || '<div class="empty">No past shows logged.</div>';
+  var next = null; for (var j=0;j<sorted.length;j++){ if ((sorted[j].date||"") >= t && sorted[j].status==="booked"){ next=sorted[j]; break; } }
+  var days = next ? Math.round((new Date(next.date) - new Date(t))/86400000) : null;
+  $("showKpi").innerHTML = '<div><small>Next show</small><b>'+(next? (days===0?"Today":days+" days") : "none")+'</b></div><div><small>Booked</small><b>'+booked+'</b></div><div><small>Fees committed</small><b>'+money(fees)+'</b></div>';
+  var opts=""; for (var k=0;k<sorted.length;k++) opts += '<option value="'+sorted[k].id+'">'+esc(fmtDate(sorted[k].date)+" · "+(sorted[k].name||"Untitled"))+'</option>';
+  $("l-show").innerHTML = opts || '<option value="">Add a show first</option>'; $("pl-show").innerHTML = $("l-show").innerHTML;
+}
+function readShowForm(){ return { date:$("s-date").value, status:$("s-status").value, name:$("s-name").value.trim(), city:$("s-city").value.trim(), hours:$("s-hours").value.trim(), fee:Number($("s-fee").value||0), miles:Number($("s-miles").value||0), notes:$("s-notes").value.trim() }; }
+function clearShowForm(){ ["s-date","s-name","s-city","s-hours","s-fee","s-miles","s-notes"].forEach(function(i){ $(i).value=""; }); $("s-status").value="booked"; editingShow=null; $("s-add").textContent="Add show"; $("s-cancel").style.display="none"; }
+
+/* ---------- booth log ---------- */
+function curLogShow(){ return $("l-show").value; }
+function getLog(id){ if(!D.logs[id]) D.logs[id]={ sales:{}, custom:[], cash:0, paypal:0, cashapp:0, weather:"", traffic:"Steady", asked:"", notes:"" }; return D.logs[id]; }
+function logTotal(L){ var t=0; for (var i=0;i<D.prices.length;i++){ var p=D.prices[i]; t += (L.sales[p.name]||0)*p.price; } for (var j=0;j<L.custom.length;j++) t+=Number(L.custom[j].price||0); return t; }
+function renderLog(){
+  var id=curLogShow(); if(!id){ $("saleRows").innerHTML='<div class="empty">Add a show on the Shows tab first.</div>'; $("l-total").textContent="$0"; return; }
+  var L=getLog(id), h="";
+  for (var i=0;i<D.prices.length;i++){ var p=D.prices[i], n=L.sales[p.name]||0;
+    h += '<div class="sale"><span>'+esc(p.name)+' <span class="muted">'+money(p.price)+'</span></span><div class="qty"><button data-q="-1" data-item="'+esc(p.name)+'">&minus;</button><b>'+n+'</b><button data-q="1" data-item="'+esc(p.name)+'">+</button></div><span class="n">'+money(n*p.price)+'</span></div>'; }
+  for (var j=0;j<L.custom.length;j++){ var c=L.custom[j]; h += '<div class="sale"><span>'+esc(c.name)+' <span class="muted">custom</span></span><button class="btn small" data-rmcustom="'+j+'">remove</button><span class="n">'+money(c.price)+'</span></div>'; }
+  $("saleRows").innerHTML=h; $("l-total").textContent=money(logTotal(L));
+  $("l-cash").value=L.cash||""; $("l-paypal").value=L.paypal||""; $("l-cashapp").value=L.cashapp||""; $("l-weather").value=L.weather||""; $("l-traffic").value=L.traffic||"Steady"; $("l-asked").value=L.asked||""; $("l-notes").value=L.notes||"";
+}
+function saveLogFields(){ var id=curLogShow(); if(!id) return; var L=getLog(id); L.savedOn=todayISO(); L.cash=Number($("l-cash").value||0); L.paypal=Number($("l-paypal").value||0); L.cashapp=Number($("l-cashapp").value||0); L.weather=$("l-weather").value; L.traffic=$("l-traffic").value; L.asked=$("l-asked").value; L.notes=$("l-notes").value; save(); }
+
+/* ---------- P&L ---------- */
+function getCost(id){ if(!D.costs[id]){ var s=showById(id)||{}; D.costs[id]={ fee:Number(s.fee||0), rate:0.70, miles:Number(s.miles||0), mat:0, other:0, hours:0 }; } return D.costs[id]; }
+function plCalc(id){ var C=getCost(id), L=D.logs[id]||{sales:{},custom:[]}; var rev=logTotal(L); var mileage=C.miles*C.rate; var cost=C.fee+mileage+C.mat+C.other; var net=rev-cost; return { rev:rev, cost:cost, net:net, mileage:mileage, perHour: C.hours>0 ? net/C.hours : null }; }
+function renderPL(){
+  var id=$("pl-show").value; if(!id){ $("plKpi").innerHTML=""; $("plSheet").textContent="Add a show first."; renderSeason(); return; }
+  var C=getCost(id); $("pl-fee").value=C.fee; $("pl-rate").value=C.rate; $("pl-miles").value=C.miles; $("pl-mat").value=C.mat||""; $("pl-other").value=C.other||""; $("pl-hours").value=C.hours||"";
+  var r=plCalc(id), s=showById(id);
+  $("plKpi").innerHTML='<div><small>Sales</small><b>'+money(r.rev)+'</b></div><div><small>Costs</small><b>'+money(r.cost)+'</b></div><div><small>Net</small><b class="'+(r.net>=0?'':'bad')+'">'+money(r.net)+'</b></div>';
+  $("plSheet").textContent = (s? s.name+" · "+fmtDate(s.date):"")+"\nSales            "+money(r.rev)+"\nBooth fee       -"+money(C.fee)+"\nMileage         -"+money(r.mileage)+"  ("+C.miles+" mi x "+money(C.rate)+")\nMaterials       -"+money(C.mat)+"\nFood, lodging   -"+money(C.other)+"\n----------------------\nNet              "+money(r.net)+(r.perHour!==null? "\nPer hour worked  "+money(r.perHour):"");
+  renderSeason();
+}
+function renderSeason(){
+  var rev=0,cost=0,n=0,h=""; var shows=D.shows.slice().sort(function(a,b){return (a.date||"").localeCompare(b.date||"");});
+  for (var i=0;i<shows.length;i++){ var s=shows[i]; if(!D.logs[s.id]) continue; var r=plCalc(s.id); rev+=r.rev; cost+=r.cost; n++;
+    h+='<div class="item"><div class="t"><b>'+esc(s.name)+'</b><span>'+fmtDate(s.date)+' &middot; sales '+money(r.rev)+' &middot; costs '+money(r.cost)+'</span></div><span class="big '+(r.net>=0?'ok':'bad')+'" style="font-size:18px">'+money(r.net)+'</span></div>'; }
+  $("seasonKpi").innerHTML='<div><small>Shows logged</small><b>'+n+'</b></div><div><small>Sales</small><b>'+money(rev)+'</b></div><div><small>Net</small><b class="'+(rev-cost>=0?'':'bad')+'">'+money(rev-cost)+'</b></div>';
+  $("seasonList").innerHTML = h || '<div class="empty">Log a show and its sales show up here.</div>';
+}
+
+/* ---------- orders + templates ---------- */
+var editingOrder=null, selectedOrder=null;
+function renderOrders(){
+  var h=""; var open=D.orders.filter(function(o){return o.status!=="delivered";}).concat(D.orders.filter(function(o){return o.status==="delivered";}));
+  for (var i=0;i<open.length;i++){ var o=open[i];
+    h+='<div class="item" style="cursor:pointer" data-sel-order="'+o.id+'"><div class="t"><b>'+esc(o.name||"Customer")+(selectedOrder===o.id?' &#9670;':'')+'</b><span>'+esc((o.spec||"").split("\n")[0])+' &middot; '+money(o.quote)+(o.deposit?' &middot; deposit '+money(o.deposit):'')+(o.due?' &middot; due '+fmtDate(o.due):'')+'</span></div><span class="pill '+esc(o.status)+'">'+esc(o.status)+'</span><button class="btn small" data-edit-order="'+o.id+'">Edit</button></div>'; }
+  $("orderList").innerHTML = h || '<div class="empty">No custom orders yet. When someone hands you a build from the site, it goes here.</div>';
+}
+function orderById(id){ for (var i=0;i<D.orders.length;i++) if(D.orders[i].id===id) return D.orders[i]; return null; }
+function nextShowLine(){ var t=todayISO(), s=D.shows.filter(function(x){return x.status==="booked" && (x.date||"")>=t;}).sort(function(a,b){return a.date.localeCompare(b.date);})[0]; return s ? s.name+" in "+s.city+" on "+fmtDate(s.date)+" ("+s.hours+")" : "the next show"; }
+var TEMPLATES = {
+  quote: function(o){ return "Hey "+o.name+", thanks for the custom order. Here is what I have written down:\n\n"+o.spec+"\n\nI can build that for "+money(o.quote)+". Half down ("+money(o.quote/2)+") gets it on the bench, the rest when it is done. Pay by cash at the booth, PayPal, or Cash App. Sound good?"; },
+  deposit: function(o){ return "Got your deposit, "+o.name+", thank you. Your "+((o.spec||"piece").split("\n")[0].toLowerCase())+" is on the bench. I will send a photo when it is ready"+(o.due?", aiming for "+fmtDate(o.due):"")+"."; },
+  ready: function(o){ return o.name+", your piece is done and it came out great. Balance is "+money(o.quote-(o.deposit||0))+". Pick up at "+nextShowLine()+", or tell me a day that works and we will figure it out."; },
+  followup: function(o){ return "Hey "+o.name+", good meeting you at the booth this weekend. If that "+((o.spec||"custom piece").split("\n")[0].toLowerCase())+" is still on your mind, my quote of "+money(o.quote)+" stands. No rush either way."; },
+  show: function(o){ return "Heads up: I will be at "+nextShowLine()+". Come find the booth, new pens and knives on the table. brightsword site: motbuchanan.github.io/brightsword/"; }
+};
+
+/* ---------- checklists ---------- */
+function listItems(which){ return DEFAULT_LISTS[which].concat(D.lists[which]||[]); }
+function renderLists(){
+  ["load","setup","down"].forEach(function(w){ var items=listItems(w), h=""; for (var i=0;i<items.length;i++){ var k=w+":"+i, on=!!D.checks[k];
+    h+='<div class="chk'+(on?' done':'')+'"><input type="checkbox" data-chk="'+k+'"'+(on?' checked':'')+'><span>'+esc(items[i])+'</span></div>'; } $("ck-"+w).innerHTML=h; });
+}
+
+/* ---------- prices editor ---------- */
+function renderPrices(){ var h=""; for (var i=0;i<D.prices.length;i++){ var p=D.prices[i]; h+='<div class="sale"><span>'+esc(p.name)+'</span><input type="number" inputmode="decimal" value="'+p.price+'" data-price="'+i+'" style="padding:6px;text-align:right"><button class="btn small" data-rmprice="'+i+'">remove</button></div>'; } $("priceEdit").innerHTML=h; }
+
+/* ---------- backup ---------- */
+function download(name, text, type){ var b=new Blob([text],{type:type||"application/json"}); var a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download=name; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },400); }
+function csvEsc(v){ v=String(v==null?"":v); return /[",\n]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }
+
+/* ---------- events ---------- */
+document.addEventListener("click", function(e){
+  var t=e.target;
+  var tab=t.closest("[data-pane]"); if (tab){ document.querySelectorAll("[data-pane]").forEach(function(b){ b.classList.toggle("on", b===tab); }); document.querySelectorAll(".pane").forEach(function(p){ p.classList.toggle("on", p.id==="p-"+tab.getAttribute("data-pane")); }); if(tab.getAttribute("data-pane")==="log") renderLog(); if(tab.getAttribute("data-pane")==="pl") renderPL(); window.scrollTo(0,0); return; }
+  if (t.closest("#s-add")){ var f=readShowForm(); if(!f.name){ toast("Give the show a name"); return; } if (editingShow){ var s=showById(editingShow); Object.assign(s,f); toast("Show updated"); } else { f.id=uid(); D.shows.push(f); toast("Show added"); } save(); clearShowForm(); renderShows(); return; }
+  if (t.closest("#s-cancel")){ clearShowForm(); return; }
+  var es=t.closest("[data-edit-show]"); if (es){ var sh=showById(es.getAttribute("data-edit-show")); editingShow=sh.id; $("s-date").value=sh.date||""; $("s-status").value=sh.status; $("s-name").value=sh.name; $("s-city").value=sh.city; $("s-hours").value=sh.hours; $("s-fee").value=sh.fee||""; $("s-miles").value=sh.miles||""; $("s-notes").value=sh.notes||""; $("s-add").textContent="Save changes"; $("s-cancel").style.display=""; window.scrollTo(0,0); return; }
+  var q=t.closest("[data-q]"); if (q){ var L=getLog(curLogShow()); var nm=q.getAttribute("data-item"); L.sales[nm]=Math.max(0,(L.sales[nm]||0)+Number(q.getAttribute("data-q"))); save(); renderLog(); return; }
+  if (t.closest("#l-custom-add")){ var nm2=$("l-custom-name").value.trim(), pr=Number($("l-custom-price").value||0); if(!nm2||!pr){ toast("Name and price"); return; } getLog(curLogShow()).custom.push({name:nm2,price:pr}); $("l-custom-name").value=""; $("l-custom-price").value=""; save(); renderLog(); return; }
+  var rc=t.closest("[data-rmcustom]"); if (rc){ getLog(curLogShow()).custom.splice(Number(rc.getAttribute("data-rmcustom")),1); save(); renderLog(); return; }
+  if (t.closest("#l-save")){ saveLogFields(); toast("Log saved"); return; }
+  if (t.closest("#pl-save")){ var id=$("pl-show").value; if(!id) return; var C=getCost(id); C.fee=Number($("pl-fee").value||0); C.rate=Number($("pl-rate").value||0); C.miles=Number($("pl-miles").value||0); C.mat=Number($("pl-mat").value||0); C.other=Number($("pl-other").value||0); C.hours=Number($("pl-hours").value||0); C.saved=true; save(); renderPL(); toast("Costs saved"); return; }
+  if (t.closest("#o-add")){ var o={ name:$("o-name").value.trim(), contact:$("o-contact").value.trim(), spec:$("o-spec").value.trim(), quote:Number($("o-quote").value||0), deposit:Number($("o-deposit").value||0), due:$("o-due").value, status:$("o-status").value }; if(!o.name){ toast("Who is it for?"); return; }
+    if (editingOrder){ Object.assign(orderById(editingOrder),o); toast("Order updated"); } else { o.id=uid(); D.orders.push(o); selectedOrder=o.id; toast("Order saved"); } save(); ["o-name","o-contact","o-spec","o-quote","o-deposit","o-due"].forEach(function(i){$(i).value="";}); $("o-status").value="quoted"; editingOrder=null; $("o-add").textContent="Save order"; $("o-cancel").style.display="none"; renderOrders(); return; }
+  if (t.closest("#o-cancel")){ editingOrder=null; $("o-add").textContent="Save order"; $("o-cancel").style.display="none"; return; }
+  var eo=t.closest("[data-edit-order]"); if (eo){ var od=orderById(eo.getAttribute("data-edit-order")); editingOrder=od.id; selectedOrder=od.id; $("o-name").value=od.name; $("o-contact").value=od.contact; $("o-spec").value=od.spec; $("o-quote").value=od.quote||""; $("o-deposit").value=od.deposit||""; $("o-due").value=od.due||""; $("o-status").value=od.status; $("o-add").textContent="Save changes"; $("o-cancel").style.display=""; renderOrders(); window.scrollTo(0,0); return; }
+  var so=t.closest("[data-sel-order]"); if (so){ selectedOrder=so.getAttribute("data-sel-order"); renderOrders(); toast("Order selected for templates"); return; }
+  var tm=t.closest("[data-tmpl]"); if (tm){ var oo=selectedOrder? orderById(selectedOrder):null; var k=tm.getAttribute("data-tmpl"); if(!oo && k!=="show"){ $("tmplOut").textContent="Tap an order in the list first."; return; } $("tmplOut").textContent=TEMPLATES[k](oo||{name:"",spec:"",quote:0}); return; }
+  if (t.closest("#tmplCopy")){ var txt=$("tmplOut").textContent; if (navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(function(){toast("Copied");},function(){toast("Select and copy manually");}); } return; }
+  var rs=t.closest("[data-reset]"); if (rs){ var w=rs.getAttribute("data-reset"); Object.keys(D.checks).forEach(function(k){ if(k.indexOf(w+":")===0) delete D.checks[k]; }); save(); renderLists(); return; }
+  if (t.closest("#ck-add")){ var w2=$("ck-which").value, tx=$("ck-text").value.trim(); if(!tx) return; D.lists[w2].push(tx); $("ck-text").value=""; save(); renderLists(); return; }
+  if (t.closest("#pe-add")){ var pn=$("pe-name").value.trim(), pp=Number($("pe-price").value||0); if(!pn) return; D.prices.push({name:pn,price:pp}); $("pe-name").value=""; $("pe-price").value=""; save(); renderPrices(); return; }
+  var rp=t.closest("[data-rmprice]"); if (rp){ D.prices.splice(Number(rp.getAttribute("data-rmprice")),1); save(); renderPrices(); return; }
+  if (t.closest("#bk-save")){ D.quest.backups=(D.quest.backups||0)+1; download("brightsword-backup-"+todayISO()+".json", JSON.stringify(D,null,1)); toast("Backup saved to Downloads"); save(); return; }
+  if (t.closest("#bk-load")){ $("bk-file").click(); return; }
+  if (t.closest("#csv-shows")){ var rows=[["date","name","city","hours","status","fee","miles","notes"]]; D.shows.forEach(function(s){ rows.push([s.date,s.name,s.city,s.hours,s.status,s.fee,s.miles,s.notes]); }); download("brightsword-shows.csv", rows.map(function(r){return r.map(csvEsc).join(",");}).join("\n"), "text/csv"); return; }
+  if (t.closest("#csv-sales")){ var rows2=[["date","show","item","qty","price","total"]]; D.shows.forEach(function(s){ var L=D.logs[s.id]; if(!L) return; D.prices.forEach(function(p){ var n=L.sales[p.name]||0; if(n) rows2.push([s.date,s.name,p.name,n,p.price,n*p.price]); }); L.custom.forEach(function(c){ rows2.push([s.date,s.name,c.name,1,c.price,c.price]); }); }); download("brightsword-sales.csv", rows2.map(function(r){return r.map(csvEsc).join(",");}).join("\n"), "text/csv"); return; }
+  if (t.closest("#wipe")){ if (confirm("Erase every show, log, and order on this phone? Save a backup first.")){ D=fresh(); save(); renderAll(); toast("Erased"); } return; }
+});
+document.addEventListener("change", function(e){
+  var t=e.target;
+  if (t.id==="l-show") renderLog();
+  if (t.id==="pl-show") renderPL();
+  if (t.matches("[data-chk]")){ D.checks[t.getAttribute("data-chk")]=t.checked; save(); renderLists(); }
+  if (t.matches("[data-price]")){ D.prices[Number(t.getAttribute("data-price"))].price=Number(t.value||0); save(); }
+  if (t.id==="bk-file"){ var f=t.files[0]; if(!f) return; var r=new FileReader(); r.onload=function(){ try{ var j=JSON.parse(r.result); if(!j.shows) throw 0; D=j; if(!D.lists) D.lists={load:[],setup:[],down:[]}; if(!D.checks) D.checks={}; save(); renderAll(); toast("Backup loaded"); }catch(x){ toast("That file is not a Bright Sword backup"); } }; r.readAsText(f); t.value=""; }
+});
+document.addEventListener("input", function(e){ if (e.target.closest("#p-log") && e.target.id.indexOf("l-")===0 && e.target.id!=="l-show" && e.target.id.indexOf("l-custom")!==0) saveLogFields(); });
+
+
+/* ================= THE FORGE YEAR: engine ================= */
+var TODAY_OVERRIDE = (function(){ var m=location.search.match(/[?&]today=(\d{4}-\d{2}-\d{2})/); return m?m[1]:null; })();
+function qToday(){ return TODAY_OVERRIDE || todayISO(); }
+var LEVELS=[0,200,450,750,1100,1500,1950,2450,3000,3600,4250,4950,5700];
+var TITLES={1:"Apprentice",3:"Journeyman",6:"Artisan",9:"Master Artisan",12:"Guildmaster"};
+var SKILLS=["smith","chronicler","quartermaster","scout","merchant"];
+var SKILL_NAMES={smith:"Smith",chronicler:"Chronicler",quartermaster:"Quartermaster",scout:"Scout",merchant:"Merchant"};
+var RANKS=[0,100,250,500,850,1300];
+var ARCS=[
+ {n:1,name:"The Harvest Road",sub:"October to December",start:"2026-10-01",boss:"firstshow",finalBoss:"longestnight",dm:"The roads fill with buyers before the snow. Book them, load the cart, light the forge. The first show is the first dragon."},
+ {n:2,name:"The Quiet Forge",sub:"January to February",start:"2027-01-01",boss:"taxman",finalBoss:"taxman",dm:"No one is buying. Good. Build the shop, shoot the work, count the coin. The Taxman waits at the end of the snow."},
+ {n:3,name:"The Scout's Map",sub:"March to May",start:"2027-03-01",boss:"gauntlet",finalBoss:"gauntlet",dm:"Ten venues in sixty miles. Five letters sealed. Three doors open. The map is yours to draw."},
+ {n:4,name:"The Faire Season",sub:"June to August",start:"2027-06-01",boss:"faire",finalBoss:"faire",dm:"Three days under canvas. The pack on your back is the one they ask about. Endure, and log every coin."},
+ {n:5,name:"The Reckoning",sub:"September",start:"2027-09-01",boss:"reckoning",finalBoss:"reckoning",dm:"Read the ledger like a blade: what to keep, what to drop, what to raise. Then book next year before the leaves turn."}
+];
+/* quest: id, arc(0=any), type main|side|zero, skill, xp, title, lore, task, proof auto|tap|photo, auto(key), window[from,to] MM-DD, repeat */
+var QUESTS=[
+ {id:"book3",arc:1,type:"main",skill:"scout",xp:120,title:"Three Roads Marked",lore:"A merchant with no road is a hermit with inventory.",task:"Have three shows marked Booked on the Shows tab.",proof:"auto",auto:"booked3"},
+ {id:"tablecard",arc:1,type:"main",skill:"merchant",xp:80,title:"The Scrying Card",lore:"A card that lets strangers build your work with their own hands.",task:"Print the QR table card once the domain exists and set it by the pen case.",proof:"photo"},
+ {id:"loadout",arc:1,type:"main",skill:"merchant",xp:60,title:"Cart Packed at Dusk",lore:"The night before decides the morning.",task:"Clear the whole load-out checklist on the Lists tab before a show.",proof:"auto",auto:"loadout"},
+ {id:"firstlog",arc:1,type:"main",skill:"quartermaster",xp:100,title:"First Coin Counted",lore:"Every sale unlogged is a sale that never happened.",task:"Log at least one sale in the booth log.",proof:"auto",auto:"firstlog"},
+ {id:"firstpl",arc:1,type:"main",skill:"quartermaster",xp:120,title:"The Honest Ledger",lore:"Gross is a story. Net is the truth.",task:"Save the costs for a show on the P&L tab.",proof:"auto",auto:"firstpl"},
+ {id:"thanks1",arc:1,type:"main",skill:"chronicler",xp:60,title:"Gratitude on the Wind",lore:"The town that bought from you deserves to hear it.",task:"Post the thank-you after your first show (template in the social kit).",proof:"photo"},
+ {id:"firstorder",arc:1,type:"main",skill:"merchant",xp:100,title:"A Commission Sworn",lore:"Custom work is where the margin lives.",task:"Save a custom order on the Orders tab.",proof:"auto",auto:"firstorder"},
+ {id:"deposit",arc:1,type:"main",skill:"merchant",xp:80,title:"Half Down, Bench Up",lore:"A deposit turns a maybe into a job.",task:"Mark an order as Deposit paid (or beyond).",proof:"auto",auto:"deposit"},
+ {id:"deadline",arc:1,type:"main",skill:"chronicler",xp:80,title:"The Winter Bell",lore:"Ring it early. The ones who hear it late are the ones who pay rush.",task:"Post the last-day-for-Christmas-custom-orders date by December 10.",proof:"photo",window:["11-15","12-10"]},
+ {id:"shopsetup",arc:2,type:"main",skill:"smith",xp:150,title:"The Hearth Relit",lore:"A new house. A new bench. The forge remembers you.",task:"Set up the workshop in the new house and take one photo of it.",proof:"photo"},
+ {id:"shopannounce",arc:2,type:"main",skill:"chronicler",xp:80,title:"Smoke From the Chimney",lore:"Let the town know the fire is back.",task:"Post the new-workshop announcement.",proof:"photo"},
+ {id:"inventory",arc:2,type:"main",skill:"quartermaster",xp:80,title:"The Count",lore:"You cannot sell what you do not know you have.",task:"Count stock by item and write the make-list for spring.",proof:"tap"},
+ {id:"backup1",arc:2,type:"main",skill:"quartermaster",xp:40,title:"The Sealed Scroll",lore:"Phones die. Scrolls survive.",task:"Save a backup file from the Office tab.",proof:"auto",auto:"backup"},
+ {id:"pricereview",arc:2,type:"main",skill:"merchant",xp:80,title:"Three Easy Yeses",lore:"If nobody flinches at the price, the price is low.",task:"Review the board: raise any item that sold out twice.",proof:"tap"},
+ {id:"venues10",arc:3,type:"main",skill:"scout",xp:150,title:"Ten Doors Found",lore:"Every fair has an organizer, and every organizer has an inbox.",task:"List ten shows within 60 miles (add them as Idea on the Shows tab).",proof:"auto",auto:"ideas10"},
+ {id:"apply5",arc:3,type:"main",skill:"scout",xp:120,title:"Five Seals Pressed",lore:"Applications are arrows. Loose five.",task:"Mark five shows Applied.",proof:"auto",auto:"applied5"},
+ {id:"spring3",arc:3,type:"main",skill:"scout",xp:150,title:"Three Doors Open",lore:"The map fills in with ink, not hope.",task:"Have three shows Booked dated March or later.",proof:"auto",auto:"spring3"},
+ {id:"mothers",arc:3,type:"main",skill:"chronicler",xp:60,title:"The Clutch and the Journal",lore:"Mothers get leather that lasts.",task:"Post the Mother's Day piece a month out.",proof:"photo",window:["04-01","05-08"]},
+ {id:"fathers",arc:3,type:"main",skill:"chronicler",xp:60,title:"Steel for the Old Man",lore:"Knives and wallets. Say it in May.",task:"Post the Father's Day piece a month out.",proof:"photo",window:["05-10","06-15"]},
+ {id:"newvenue",arc:3,type:"main",skill:"scout",xp:100,title:"Unfamiliar Ground",lore:"New town, new regulars.",task:"Work a show at a venue you have never set up at.",proof:"tap"},
+ {id:"multiday",arc:4,type:"main",skill:"merchant",xp:150,title:"Under Canvas",lore:"One day is a sprint. Three is a siege.",task:"Work a multi-day show (consecutive dates, same show name on the Shows tab).",proof:"auto",auto:"multiday"},
+ {id:"packpost",arc:4,type:"main",skill:"chronicler",xp:60,title:"The Pack They Ask About",lore:"Your best photo is already taken. Use it.",task:"Post the black-and-orange faire backpack.",proof:"photo"},
+ {id:"beltbatch",arc:4,type:"main",skill:"smith",xp:100,title:"A Dozen Belts",lore:"Faire folk buy belts. Cut them before June.",task:"Make a batch of belts for faire season.",proof:"photo"},
+ {id:"bigorder",arc:4,type:"main",skill:"merchant",xp:150,title:"The Guild Contract",lore:"One order that pays like a show.",task:"Land a bulk or event order over $300 (quote on the Orders tab).",proof:"auto",auto:"order300"},
+ {id:"customerpic",arc:4,type:"main",skill:"chronicler",xp:60,title:"Worn Into the World",lore:"A customer wearing your work is the only ad that matters.",task:"Post a photo of a customer with their piece (ask first).",proof:"photo"},
+ {id:"midyear",arc:4,type:"main",skill:"quartermaster",xp:80,title:"Half the Ledger",lore:"Six months in, read the numbers.",task:"Read the Season so far card on the P&L tab with 4+ shows logged.",proof:"auto",auto:"logs4"},
+ {id:"seasonread",arc:5,type:"main",skill:"quartermaster",xp:120,title:"The Whole Ledger",lore:"Eight shows tell the truth about a year.",task:"Have 8 or more shows logged on the P&L tab.",proof:"auto",auto:"logs8"},
+ {id:"dropworst",arc:5,type:"main",skill:"quartermaster",xp:80,title:"Cut the Dead Road",lore:"Loyalty to a bad show is a fee you pay twice.",task:"Drop the worst show by net per hour from next year's list.",proof:"tap"},
+ {id:"raiseone",arc:5,type:"main",skill:"merchant",xp:80,title:"The Brass Nail",lore:"Raise one price. Watch nothing happen.",task:"Raise one price on the board.",proof:"tap"},
+ {id:"booknext",arc:5,type:"main",skill:"scout",xp:120,title:"Next Year's First Three",lore:"The road is booked before the leaves fall.",task:"Book three shows dated in the next year.",proof:"auto",auto:"nextyear3"},
+ {id:"yearpost",arc:5,type:"main",skill:"chronicler",xp:80,title:"The Year Told",lore:"Twelve months in one post. Photos, numbers, thanks.",task:"Post the year's story.",proof:"photo"},
+ /* side quests, repeatable */
+ {id:"wip",arc:0,type:"side",skill:"chronicler",xp:20,title:"Smoke and Steel",lore:"Show the making, not the made.",task:"Post one work-in-progress photo.",proof:"photo",repeat:true},
+ {id:"sameday",arc:0,type:"side",skill:"quartermaster",xp:30,title:"Fresh Ink",lore:"Log it while the cash box is still warm.",task:"Save a booth log on the same day as the show.",proof:"auto",auto:"sameday",repeat:true},
+ {id:"reply1",arc:0,type:"side",skill:"merchant",xp:20,title:"The Quick Raven",lore:"An answer within a day beats a perfect one in a week.",task:"Answer a custom inquiry within a day (use the templates).",proof:"tap",repeat:true},
+ {id:"noonpic",arc:0,type:"side",skill:"chronicler",xp:15,title:"Noon at the Booth",lore:"A booth with people in it sells the next booth.",task:"Take a photo of the booth at noon, with a crowd if there is one.",proof:"photo",repeat:true},
+ {id:"backupside",arc:0,type:"side",skill:"quartermaster",xp:10,title:"Seal the Scroll Again",lore:"Every show, a scroll.",task:"Save a backup after a show.",proof:"auto",auto:"backup",repeat:true},
+ {id:"bookmark",arc:0,type:"side",skill:"merchant",xp:10,title:"The Smallest Coin",lore:"A five-dollar bookmark with a kid's initials is still a sale, and a family that remembers you.",task:"Sell a design-your-own bookmark.",proof:"auto",auto:"bookmark",repeat:true},
+ {id:"bigday",arc:0,type:"side",skill:"merchant",xp:80,title:"The Rush",lore:"Twenty pieces in a day. The table looked bare and you loved it.",task:"Log 20 or more items in one show.",proof:"auto",auto:"bigday",repeat:true},
+ {id:"rekindle",arc:0,type:"side",skill:"smith",xp:60,title:"Rekindle",lore:"The forge cooled. That is fine. One strike relights it.",task:"Do any one thing for the business today, then tap.",proof:"tap",repeat:true,hidden:true}
+];
+var BOSSES=[
+ {id:"firstshow",arc:1,name:"The First Show",sub:"The dragon at the end of the Harvest Road",xp:300,loot:"cashbox",dm:"An empty tent at dawn. It looks harmless. It is not.",
+  steps:[{id:"a",lore:"Pack the cart",task:"Load-out checklist cleared",auto:"loadout"},{id:"b",lore:"Raise the tent",task:"Setup checklist cleared",auto:"setup"},{id:"c",lore:"First blood",task:"One sale logged",auto:"firstlog"},{id:"d",lore:"A stranger scries",task:"Someone scans the booth card",tap:true},{id:"e",lore:"Strike the tent",task:"Breakdown checklist cleared",auto:"down"},{id:"f",lore:"Count the hoard",task:"P&L saved for that show",auto:"firstpl"}]},
+ {id:"blackfriday",arc:1,name:"Black Friday Rush",sub:"Mid-boss, the crowd as a wave",xp:200,loot:"reader",dm:"They come all at once. Keep the line moving.",
+  steps:[{id:"a",lore:"Hold the line",task:"20+ items logged in one show",auto:"bigday"},{id:"b",lore:"Coin in three purses",task:"Cash, PayPal, and Cash App all taken in one show",auto:"threepay"},{id:"c",lore:"Log before sleep",task:"Same-day booth log",auto:"sameday"}]},
+ {id:"longestnight",arc:1,name:"The Longest Night",sub:"December, the arc boss",xp:400,loot:"shirt",dm:"Every promise you made in November comes due in the dark.",
+  steps:[{id:"a",lore:"Ring the bell",task:"Deadline post made",questdone:"deadline"},{id:"b",lore:"Every oath kept",task:"All custom orders delivered before Dec 24",auto:"ordersclear"},{id:"c",lore:"The last coin",task:"Final December show logged",tap:true},{id:"d",lore:"Rest",task:"Backup saved after the season",auto:"backup"}]},
+ {id:"taxman",arc:2,name:"The Taxman",sub:"Patient, hooded, never evil",xp:500,loot:"ledger",dm:"He does not want your gold. He wants your paper in order. Give him the pile and he leaves.",
+  steps:[{id:"a",lore:"Gather the coin count",task:"Export the sales CSV for the year (Office tab)",tap:true},{id:"b",lore:"Gather the toll",task:"Total booth fees and mileage from the P&L tab",tap:true},{id:"c",lore:"Read the writ",task:"Check whether an Ohio vendor's license applies to your show sales",tap:true},{id:"d",lore:"Summon the scribe",task:"Book an hour with a tax preparer, or confirm how you file",tap:true},{id:"e",lore:"Sign",task:"File",tap:true}]},
+ {id:"gauntlet",arc:3,name:"The Application Gauntlet",sub:"A hallway of doors with wax seals",xp:300,loot:"map",dm:"Each door wants a form, a photo, and a fee. Knock on all of them.",
+  steps:[{id:"a",lore:"Ten doors",task:"Ten shows listed as Idea",auto:"ideas10"},{id:"b",lore:"Five knocks",task:"Five marked Applied",auto:"applied5"},{id:"c",lore:"Three opened",task:"Three Booked after March 1",auto:"spring3"}]},
+ {id:"faire",arc:4,name:"The Three-Day Faire",sub:"A three-headed tent",xp:400,loot:"hat",dm:"Setup, sell, sleep, repeat. The third morning is the test.",
+  steps:[{id:"a",lore:"Day one",task:"Multi-day show on the calendar",auto:"multiday"},{id:"b",lore:"Day two",task:"Log sales on two consecutive days",auto:"twodays"},{id:"c",lore:"Day three",task:"Breakdown checklist cleared after the final day",tap:true}]},
+ {id:"reckoning",arc:5,name:"The Reckoning",sub:"Your reflection in a polished blade",xp:500,loot:"hearthstone",dm:"Four decisions. Make them with the ledger open.",
+  steps:[{id:"a",lore:"Read the year",task:"8+ shows logged",auto:"logs8"},{id:"b",lore:"Cut",task:"Drop the worst show",questdone:"dropworst"},{id:"c",lore:"Raise",task:"Raise one price",questdone:"raiseone"},{id:"d",lore:"Book",task:"Next year's first three booked",auto:"nextyear3"}]}
+];
+var ARTIFACTS=[
+ {id:"signet",name:"The Signet",rarity:"uncommon",lore:"Your mark, pressed into everything.",art:"art-signet.png",unlock:"zero",plain:"Finish Session Zero",design:"signet"},
+ {id:"bizcard",name:"The Calling Card",rarity:"common",lore:"Small enough to forget, until they find it in a coat pocket in March.",art:"art-bizcard.png",unlock:"zero",plain:"Finish Session Zero",design:"bizcard"},
+ {id:"shirt",name:"The Booth Shirt",rarity:"uncommon",lore:"Armor. Sells the booth while you wear it.",art:"art-shirt.png",unlock:"anyquest",plain:"Complete any one quest",design:"shirt"},
+ {id:"tablecard",name:"The Scrying Card",rarity:"rare",lore:"Strangers build your work on their own glass.",art:"art-tablecard.png",unlock:"q:book3",plain:"Book three shows",design:"tablecard"},
+ {id:"sticker",name:"The Sticker",rarity:"common",lore:"Goes in every bag. Travels farther than the truck.",art:"art-sticker.png",unlock:"q:wip",plain:"Post one work-in-progress photo",design:"sticker"},
+ {id:"priceboard",name:"The Board",rarity:"common",lore:"Prices in brass. No more printer paper.",art:"art-priceboard.png",unlock:"q:firstlog",plain:"Log your first sale",design:"priceboard"},
+ {id:"insert",name:"The Thank-You Card",rarity:"common",lore:"In every box. The cheapest referral you will ever buy.",art:"art-insert.png",unlock:"q:firstorder",plain:"Save your first custom order",design:"insert"},
+ {id:"banner",name:"The Banner",rarity:"rare",lore:"Three words readable from twenty feet.",art:"art-banner.png",unlock:"q:firstpl",plain:"Save a P&L for a show",design:"banner"},
+ {id:"flyer",name:"The Handbill",rarity:"common",lore:"Pinned at the leather supply, left at the coffee shop.",art:"art-flyer.png",unlock:"q:thanks1",plain:"Post a thank-you after a show",design:"flyer"},
+ {id:"letterhead",name:"The Letterhead",rarity:"common",lore:"Quotes and invoices that look like they came from a guild.",art:"art-letterhead.png",unlock:"q:deposit",plain:"Take a deposit on an order",design:"letterhead"},
+ {id:"tote",name:"The Tote",rarity:"common",lore:"Walks the show with your mark on it.",art:"art-tote.png",unlock:"logs3",plain:"Log sales at three shows",design:"tote"},
+ {id:"tag",name:"The Maker's Tag",rarity:"uncommon",lore:"Stamped leather on every piece. You make these yourself.",art:"art-tag.png",unlock:"q:shopsetup",plain:"Set up the new workshop",design:"tag"},
+ {id:"hat",name:"The Hat",rarity:"uncommon",lore:"Leather patch. Shade for the third day.",art:"art-hat.png",unlock:"boss:taxman",plain:"Defeat the Taxman",design:"hat"},
+ {id:"cashbox",name:"The Cash Box",rarity:"common",lore:"A hundred in small bills and a lock.",art:"art-cashbox.png",unlock:"boss",plain:"Loot from The First Show"},
+ {id:"reader",name:"The Card Reader",rarity:"uncommon",lore:"Takes the coin they did not bring.",art:"art-reader.png",unlock:"boss",plain:"Loot from Black Friday Rush"},
+ {id:"ledger",name:"The Iron Ledger",rarity:"rare",lore:"The Taxman's own book, surrendered.",art:"art-ledger.png",unlock:"boss",plain:"Loot from The Taxman"},
+ {id:"map",name:"The Map",rarity:"rare",lore:"Sixty miles of doors, and which ones open.",art:"art-map.png",unlock:"boss",plain:"Loot from The Application Gauntlet"},
+ {id:"weights",name:"Tent Weights",rarity:"common",lore:"The wind has taken better tents than yours.",art:"art-weights.png",unlock:"q:loadout",plain:"Clear the load-out checklist"},
+ {id:"domain",name:"The True Name",rarity:"mythic",lore:"A name on the wind that is yours alone.",art:"art-domain.png",unlock:"mot",plain:"Buy the domain (Mot flips this one)"},
+ {id:"hearthstone",name:"The Hearthstone",rarity:"mythic",lore:"The shop itself. Everything else is carried.",art:"art-hearthstone.png",unlock:"boss",plain:"Loot from The Reckoning, or a natural 20"}
+];
+var ABILITIES=[
+ {id:"stitch",skill:"smith",rank:2,name:"Saddle-Stitch Discipline",lore:"Two needles, one line, no shortcuts.",effect:"+10% XP on Smith quests"},
+ {id:"eye",skill:"smith",rank:3,name:"Smith's Eye",lore:"You see the piece before the leather is cut.",effect:"WIP photo quests count double"},
+ {id:"crier",skill:"chronicler",rank:2,name:"Town Crier",lore:"The right words at the right hour.",effect:"+10% XP on Chronicler quests"},
+ {id:"story",skill:"chronicler",rank:3,name:"The Long Story",lore:"A year told well is worth a show.",effect:"Thank-you posts award +20 XP"},
+ {id:"ledgereye",skill:"quartermaster",rank:2,name:"Ledger Eye",lore:"Net per hour, seen at a glance.",effect:"+10% XP on Quartermaster quests"},
+ {id:"scroll",skill:"quartermaster",rank:3,name:"Scroll Keeper",lore:"Nothing is lost that was sealed.",effect:"Backups award double"},
+ {id:"pathfinder",skill:"scout",rank:2,name:"Pathfinder",lore:"Every road has a fair at the end of it.",effect:"+10% XP on Scout quests"},
+ {id:"boothsense",skill:"merchant",rank:2,name:"Booth Sense",lore:"You know what sold before you count.",effect:"+10% XP on Merchant quests"},
+ {id:"secondwind",skill:"merchant",rank:4,name:"Second Wind",lore:"One missed card does not break the week.",effect:"A clean sweep survives one unfinished card"}
+];
+function freshQuest(){ return { opened:false, initiative:0, zero:{}, zeroDone:false, xp:0, skillxp:{smith:0,chronicler:0,quartermaster:0,scout:0,merchant:0}, done:{}, artifacts:{}, bosses:{}, hand:{week:"",cards:[],sweeps:0}, journal:[], photos:{}, backups:0, sidesUnlocked:["wip","sameday","reply1","noonpic","backupside","bookmark"], lastActive:"", tapped:{}, seenLib:false }; }
+if (!D.quest) D.quest = freshQuest();
+var Q = D.quest;
+function qById(id){ for (var i=0;i<QUESTS.length;i++) if(QUESTS[i].id===id) return QUESTS[i]; return null; }
+function bossById(id){ for (var i=0;i<BOSSES.length;i++) if(BOSSES[i].id===id) return BOSSES[i]; return null; }
+function artById(id){ for (var i=0;i<ARTIFACTS.length;i++) if(ARTIFACTS[i].id===id) return ARTIFACTS[i]; return null; }
+function level(){ var l=1; for (var i=1;i<LEVELS.length;i++) if (Q.xp>=LEVELS[i]) l=i+1; return Math.min(l,12); }
+function titleFor(l){ var t="Apprentice"; for (var k in TITLES) if (l>=Number(k)) t=TITLES[k]; return t; }
+function rank(s){ var r=0; for (var i=1;i<RANKS.length;i++) if ((Q.skillxp[s]||0)>=RANKS[i]) r=i; return r; }
+function handSize(){ var l=level(); return (l<=4?3:l<=8?4:5); }
+function currentArc(){ var t=qToday(); var arc=1; for (var i=1;i<ARCS.length;i++){ var prev=ARCS[i-1]; if (t>=ARCS[i].start || (Q.bosses[prev.finalBoss] && Q.bosses[prev.finalBoss].dead)) arc=ARCS[i].n; } return arc; }
+function arcUnlocked(n){ return n<=currentArc(); }
+function inWindow(q){ if(!q.window) return true; var t=qToday().slice(5); var a=q.window[0], b=q.window[1]; return a<=b ? (t>=a && t<=b) : (t>=a || t<=b); }
+function isUnlocked(q){ if (q.type==="side") return Q.sidesUnlocked.indexOf(q.id)!==-1 || (!q.hidden && arcUnlocked(2)); return arcUnlocked(q.arc); }
+function isDone(q){ return !!Q.done[q.id]; }
+function timesDone(q){ return Q.done[q.id]||0; }
+
+/* ---------- auto checks from the office data ---------- */
+function checks(){
+  var t=qToday(), booked=D.shows.filter(function(s){return s.status==="booked";});
+  var logs=D.shows.map(function(s){return {s:s,L:D.logs[s.id]};}).filter(function(x){return x.L;});
+  var anySale=logs.some(function(x){return logTotal(x.L)>0;});
+  var items=function(L){ var n=0; for (var k in L.sales) n+=L.sales[k]; return n+L.custom.length; };
+  var allChk=function(w){ var n=listItems(w).length; for (var i=0;i<n;i++) if(!Q_checksSnapshot(w+":"+i)) return false; return n>0; };
+  var byName={}; D.shows.forEach(function(s){ (byName[s.name]=byName[s.name]||[]).push(s.date); });
+  var multi=Object.keys(byName).some(function(n){ var d=byName[n].sort(); for (var i=1;i<d.length;i++){ if (dayDiff(d[i-1],d[i])===1) return true; } return false; });
+  var twodays=(function(){ var ds=logs.filter(function(x){return logTotal(x.L)>0;}).map(function(x){return x.s.date;}).sort(); for (var i=1;i<ds.length;i++) if (dayDiff(ds[i-1],ds[i])===1) return true; return false; })();
+  var yr=Number(t.slice(0,4));
+  return {
+    booked3: booked.length>=3,
+    loadout: allChk("load"), setup: allChk("setup"), down: allChk("down"),
+    firstlog: anySale,
+    firstpl: Object.keys(D.costs).some(function(k){return D.costs[k].saved;}),
+    firstorder: D.orders.length>=1,
+    deposit: D.orders.some(function(o){return ["deposit","progress","done","delivered"].indexOf(o.status)!==-1;}),
+    ordersclear: D.orders.length>=1 && D.orders.every(function(o){return o.status==="delivered";}) && t.slice(5)>="12-01" && t.slice(5)<="12-24",
+    backup: Q.backups>=1,
+    ideas10: D.shows.filter(function(s){return s.status==="idea"||s.status==="applied"||s.status==="booked";}).length>=10,
+    applied5: D.shows.filter(function(s){return s.status==="applied"||s.status==="booked";}).length>=5,
+    spring3: booked.filter(function(s){return (s.date||"")>="2027-03-01";}).length>=3,
+    multiday: multi, twodays: twodays,
+    order300: D.orders.some(function(o){return Number(o.quote)>=300;}),
+    logs4: logs.length>=4, logs8: logs.length>=8,
+    nextyear3: booked.filter(function(s){return Number((s.date||"0000").slice(0,4))>yr;}).length>=3,
+    sameday: logs.some(function(x){return x.L.savedOn && x.L.savedOn===x.s.date;}),
+    bigday: logs.some(function(x){return items(x.L)>=20;}),
+    threepay: logs.some(function(x){return x.L.cash>0 && x.L.paypal>0 && x.L.cashapp>0;}),
+    bookmark: logs.some(function(x){return (x.L.sales["Bookmark"]||0)>0;})
+  };
+}
+function Q_checksSnapshot(k){ return !!D.checks[k]; }
+function dayDiff(a,b){ return Math.round((new Date(b)-new Date(a))/86400000); }
+
+/* ---------- awards ---------- */
+var REVEAL_QUEUE=[];
+function skillBonus(skill){ var ab={smith:"stitch",chronicler:"crier",quartermaster:"ledgereye",scout:"pathfinder",merchant:"boothsense"}[skill]; return rank(skill)>=2 && ab ? 1.1 : 1; }
+function award(xp, skill, why){
+  var before=level(); var gain=Math.round(xp*skillBonus(skill));
+  Q.xp+=gain; Q.skillxp[skill]=(Q.skillxp[skill]||0)+gain; Q.lastActive=qToday();
+  Q.journal.unshift({d:qToday(), t:why, xp:gain, s:skill});
+  var after=level();
+  if (after>before) REVEAL_QUEUE.push({kick:"Level up", title:"Level "+after+" · "+titleFor(after), xp:"+"+gain+" XP", dm:levelDm(after)});
+  return gain;
+}
+function levelDm(l){ return {2:"The apprentice has a name now. The realm will learn it.",3:"Journeyman. You can work any road in the county.",6:"Artisan. Your mark means something at the fairs.",9:"Master Artisan. Others ask how you did it.",12:"Guildmaster. Year Two waits, with your own numbers as the bar."}[l] || "The forge burns hotter."; }
+function completeQuest(q, silent){
+  var n=timesDone(q); if (n>=1 && !q.repeat) return;
+  Q.done[q.id]=n+1; markHandDone(q.id);
+  var gain=award(q.xp, q.skill, q.title);
+  if (!silent) REVEAL_QUEUE.push({kick:(n>=1?"Foil earned":"Quest complete"), title:q.title, xp:"+"+gain+" XP", card:cardHTML("quest",q,{}), dm:q.lore});
+  var arc=q.arc; if (arc>0 && arcUnlocked(arc+1)===false && ARCS[arc]){ /* arc unlock is date or boss driven; nothing here */ }
+}
+function bossState(b){ if(!Q.bosses[b.id]) Q.bosses[b.id]={hits:{},dead:false}; return Q.bosses[b.id]; }
+function checkBoss(b, C){
+  var st=bossState(b); if (st.dead) return;
+  b.steps.forEach(function(s){ if (st.hits[s.id]) return; if (s.auto && C[s.auto]) st.hits[s.id]=qToday(); if (s.questdone && Q.done[s.questdone]) st.hits[s.id]=qToday(); });
+  if (b.steps.every(function(s){return st.hits[s.id];})){ st.dead=true; var gain=award(b.xp,"merchant","Defeated "+b.name); Q.artifacts[b.loot]=qToday(); var a=artById(b.loot); REVEAL_QUEUE.push({kick:"Boss defeated", title:b.name, xp:"+"+gain+" XP", card:cardHTML("artifact",a,{}), dm:"Loot: "+a.name+". "+a.lore}); }
+}
+function questCheck(){
+  var C=checks();
+  QUESTS.forEach(function(q){ if (q.proof!=="auto" || !isUnlocked(q) || !inWindow(q)) return; if (!C[q.auto]) return; if (q.repeat){ var key=q.id+":"+JSON.stringify(sigFor(q,C)); if (Q.tapped[key]) return; Q.tapped[key]=1; completeQuest(q); } else if (!isDone(q)) completeQuest(q); });
+  BOSSES.forEach(function(b){ if (arcUnlocked(b.arc)) checkBoss(b,C); });
+  armoryCheck();
+  weekTick();
+  saveCore(); renderQuest(); renderArmory(); flushReveals();
+}
+function sigFor(q,C){ /* repeatable auto quests fire once per distinct trigger */ if (q.auto==="backup") return Q.backups; if (q.auto==="sameday") return D.shows.filter(function(s){return D.logs[s.id]&&D.logs[s.id].savedOn===s.date;}).length; if (q.auto==="bigday") return D.shows.filter(function(s){var L=D.logs[s.id]; if(!L) return false; var n=0; for(var k in L.sales) n+=L.sales[k]; return n+L.custom.length>=20;}).length; if (q.auto==="bookmark") return D.shows.filter(function(s){var L=D.logs[s.id]; return L&&(L.sales["Bookmark"]||0)>0;}).map(function(s){return s.id+":"+(D.logs[s.id].sales["Bookmark"]||0);}).join(","); return 1; }
+
+/* ---------- the weekly hand ---------- */
+function weekKey(d){ var dt=new Date(d+"T12:00:00"); var day=dt.getDay(); dt.setDate(dt.getDate()-day); return dt.toISOString().slice(0,10); }
+function weekTick(){
+  var wk=weekKey(qToday());
+  if (Q.hand.week && Q.hand.week!==wk){
+    var cards=Q.hand.cards.map(qById).filter(Boolean);
+    if (cards.length){
+      var unfinished=cards.filter(function(q){ return !(Q.hand.doneAt && Q.hand.doneAt[q.id]); }).length;
+      var allowed = rank("merchant")>=4 ? 1 : 0;
+      if (unfinished<=allowed){ Q.hand.sweeps=(Q.hand.sweeps||0)+1; var bonus=Math.round(cards.reduce(function(a,q){return a+q.xp;},0)*0.25); award(bonus,"merchant","Clean sweep"); unlockBooster(); REVEAL_QUEUE.push({kick:"Clean sweep", title:"Every card played", xp:"+"+bonus+" XP", dm:"A booster pack opens. One new side quest joins your library."}); }
+    }
+    Q.hand={week:"",cards:[],sweeps:Q.hand.sweeps||0,doneAt:{}};
+  }
+  if (Q.lastActive && dayDiff(Q.lastActive,qToday())>=14 && Q.sidesUnlocked.indexOf("rekindle")===-1) Q.sidesUnlocked.push("rekindle");
+}
+function unlockBooster(){ var locked=QUESTS.filter(function(q){return q.type==="side" && !q.hidden && Q.sidesUnlocked.indexOf(q.id)===-1;}); if (locked.length){ Q.sidesUnlocked.push(locked[Math.floor(Math.random()*locked.length)].id); } }
+function handAvailable(){ return QUESTS.filter(function(q){ return isUnlocked(q) && inWindow(q) && (q.repeat || !isDone(q)); }); }
+function toggleHand(id){
+  var q=qById(id); if(!q) return;
+  if (!Q.hand.week) Q.hand.week=weekKey(qToday());
+  var i=Q.hand.cards.indexOf(id);
+  if (i!==-1){ Q.hand.cards.splice(i,1); }
+  else { if (Q.hand.cards.length>=handSize()+(Q.hand.week===weekKey(Q.zero.date||"1970-01-01")?Math.floor((Q.initiative||0)/10):0)){ toast("Hand is full ("+handSize()+")"); return; } Q.hand.cards.push(id); }
+  saveCore(); renderQuest();
+}
+function markHandDone(id){ if(!Q.hand.doneAt) Q.hand.doneAt={}; if (Q.hand.cards.indexOf(id)!==-1) Q.hand.doneAt[id]=qToday(); }
+
+/* ---------- cards ---------- */
+function placeholderArt(kind, seed){
+  var hue = {quest:"#c9973f",ability:"#5aa7e8",artifact:"#ff7a2f"}[kind];
+  var s = (seed||"").length;
+  return '<svg viewBox="0 0 200 96" preserveAspectRatio="xMidYMid slice"><rect width="200" height="96" fill="#14100c"/><circle cx="'+(60+s*3%80)+'" cy="52" r="34" fill="'+hue+'" opacity=".16"/><path d="M0 80 q50 -30 100 -10 t100 -20 v46 h-200 z" fill="'+hue+'" opacity=".12"/><circle cx="100" cy="42" r="14" fill="none" stroke="'+hue+'" stroke-width="2"/><path d="M92 42 h16 M100 34 v16" stroke="'+hue+'" stroke-width="2"/></svg>';
+}
+function cardHTML(kind, o, opt){
+  var art = placeholderArt(kind,o.id) + (o.art ? '<img src="'+esc(o.art)+'" alt="" onerror="this.style.display=\'none\'">' : '');
+  var cls="card", meta="", act="", extra="";
+  if (kind==="quest"){
+    var n=timesDone(o); if (n>=2) cls+=" foil"; else if (n>=1 && !o.repeat) cls+=" done"; if (opt.locked) cls+=" locked"; if (opt.inhand) cls+=" inhand";
+    meta='<span><span class="badge '+o.proof+'">'+(o.proof==="auto"?"auto":o.proof==="photo"?"photo":"tap")+'</span>'+esc(SKILL_NAMES[o.skill])+'</span><b>'+o.xp+' XP</b>';
+    if (o.window) extra='<div class="win">Window: '+o.window[0].replace("-","/")+' to '+o.window[1].replace("-","/")+'</div>';
+    if (opt.actions && !opt.locked){ if (o.proof!=="auto" && (o.repeat||!isDone(o))) act+='<button class="go" data-qdone="'+o.id+'">Done</button>'; if (o.proof==="photo") act+='<button data-qphoto="'+o.id+'">Attach photo</button>'; act+='<button data-qhand="'+o.id+'">'+(opt.inhand?"Remove":"To hand")+'</button>'; }
+
+  } else if (kind==="ability"){
+    var have=rank(o.skill)>=o.rank; if(!have) cls+=" locked";
+    meta='<span>'+esc(SKILL_NAMES[o.skill])+' rank '+o.rank+'</span><b>'+(have?"active":"locked")+'</b>';
+    extra='<div class="task">'+esc(o.effect)+'</div>';
+  } else {
+    var own=!!Q.artifacts[o.id]; if(!own) cls+=" locked";
+    meta='<span>'+esc(o.rarity)+'</span><b>'+(own?"owned":"not yet")+'</b>';
+    extra='<span class="gem '+o.rarity+'"></span>';
+  }
+  return '<div class="'+cls+'" data-card="'+kind+':'+o.id+'">'+(kind==="artifact"?extra:"")+'<div class="art">'+art+'</div><div class="body"><div class="type">'+kind+(kind==="quest"?" · "+o.type:"")+'</div><div class="title">'+esc(kind==="quest"||kind==="ability"?o.title||o.name:o.name)+'</div><div class="lore">'+esc(o.lore)+'</div>'+(kind==="quest"?'<div class="task">'+esc(o.task)+'</div>'+extra:(kind==="ability"?extra:""))+'<div class="meta">'+meta+'</div>'+(act?'<div class="act">'+act+'</div>':'')+'</div></div>';
+}
+
+
+/* ================= THE ARMORY ================= */
+var LINES=["If you can think of it, we can make it.","Leather. Wood. Steel. Made by hand.","Saddle stitched. No shortcuts.","Turned one blank at a time.","Made in Massillon, Ohio."];
+if (!Q.designs) Q.designs={};
+function armoryCheck(){
+  var owned=false;
+  ARTIFACTS.forEach(function(a){
+    if (Q.artifacts[a.id]) return; var u=a.unlock, ok=false;
+    if (u==="zero") ok=Q.zeroDone; else if (u==="anyquest") ok=Object.keys(Q.done).length>=1;
+    else if (u.indexOf("q:")===0) ok=!!Q.done[u.slice(2)]; else if (u==="logs3") ok=D.shows.filter(function(s){return D.logs[s.id]&&logTotal(D.logs[s.id])>0;}).length>=3;
+    else if (u==="boss:taxman") ok=!!(Q.bosses.taxman&&Q.bosses.taxman.dead);
+    if (ok){ Q.artifacts[a.id]=qToday(); owned=true; REVEAL_QUEUE.push({kick:"Gear earned", title:a.name, xp:(a.design?"Open the Armory to forge it":""), card:cardHTML("artifact",a,{}), dm:a.lore}); }
+  });
+  return owned;
+}
+function renderArmory(){
+  if (!$("armoryHost")) return; var h="";
+  ARTIFACTS.forEach(function(a){
+    var own=!!Q.artifacts[a.id];
+    var art = (own && a.design) ? PIECES[a.design](PAL[(Q.designs[a.id]||{}).ground||"coal"]) : placeholderArt("artifact",a.id) + (a.art ? '<img src="'+esc(a.art)+'" alt="" onerror="this.style.display=\'none\'">' : '');
+    var act = own ? (a.design ? '<div class="act"><button class="go" data-forge="'+a.id+'">'+(Q.designs[a.id]?"Reforge":"Forge it")+'</button>'+(Q.designs[a.id]?'<button data-forgesend="'+a.id+'">Send design</button>':'')+'</div>' : '<div class="unl" style="color:var(--ok)">Owned. A real object, not a design.</div>') : '<div class="unl">Earned by: '+esc(a.plain)+'</div>';
+    h+='<div class="card arm'+(own?"":" locked")+'"><span class="gem '+a.rarity+'"></span><div class="art">'+art+'</div><div class="body"><div class="type">'+(a.design?"gear \u00b7 design":"gear")+'</div><div class="title">'+esc(a.name)+'</div><div class="lore">'+esc(a.lore)+'</div>'+act+'</div></div>';
+  });
+  $("armoryHost").innerHTML=h;
+}
+/* ---------- designers: one composer, many objects ---------- */
+var PAL={coal:{obj:"#171310",ink:"#efe3cf",acc:"#c9973f",mark:"bsa-logo.png"},parch:{obj:"#efe3cf",ink:"#241a10",acc:"#a3400f",mark:"bsa-logo-dark.png"},ember:{obj:"#171310",ink:"#ff9a52",acc:"#ff7a2f",mark:"bsa-logo.png"}};
+var FORGE={id:null,layout:"a",ground:"coal",line:0,custom:""};
+function fLine(){ return FORGE.custom.trim() || LINES[FORGE.line] || ""; }
+function compose(x,y,w,h,p,opts){
+  /* draws mark / name / line inside a box per FORGE.layout; returns svg fragment */
+  var L=FORGE.layout, line=fLine(), small=opts&&opts.small, out="";
+  var name="Bright Sword Artisan";
+  function txt(tx,ty,size,fill,fam,anchor,it){ return '<text x="'+tx+'" y="'+ty+'" font-size="'+size+'" fill="'+fill+'" font-family="'+(fam||"Georgia,serif")+'" text-anchor="'+(anchor||"middle")+'"'+(it?' font-style="italic"':'')+'>'+esc(tx)+'</text>'; }
+  if (L==="a"){ var m=Math.min(w,h)*0.62; out+='<image href="'+p.mark+'" x="'+(x+w/2-m/2)+'" y="'+(y+h*0.06)+'" width="'+m+'" height="'+m+'"/>'; if(!small) out+=txt(line,y+h*0.06+m+h*0.14,Math.min(w,h)*0.075,p.acc,"Georgia,serif","middle",true); }
+  else if (L==="b"){ var m2=h*0.7; out+='<image href="'+p.mark+'" x="'+(x+w*0.04)+'" y="'+(y+h/2-m2/2)+'" width="'+m2+'" height="'+m2+'"/>'; var tx=x+w*0.04+m2+w*0.05, avail=x+w-tx-w*0.03, fs=Math.min(h*0.19, avail/6.4); out+='<text x="'+tx+'" y="'+(y+h*0.46)+'" font-size="'+fs+'" fill="'+p.ink+'" font-family="Georgia,serif">Bright Sword</text><text x="'+tx+'" y="'+(y+h*0.66)+'" font-size="'+fs+'" fill="'+p.ink+'" font-family="Georgia,serif">Artisan</text>'; if(!small) out+='<text x="'+tx+'" y="'+(y+h*0.86)+'" font-size="'+(h*0.09)+'" fill="'+p.acc+'" font-family="Georgia,serif" font-style="italic" textLength="'+avail+'" lengthAdjust="spacingAndGlyphs">'+esc(line)+'</text>'; }
+  else { var fs2=Math.min(w*0.11,h*0.3); out+=txt("BRIGHT SWORD",x+w/2,y+h*0.42,fs2,p.ink,"Georgia,serif"); out+=txt("ARTISAN",x+w/2,y+h*0.68,fs2,p.ink,"Georgia,serif"); if(!small) out+='<text x="'+(x+w/2)+'" y="'+(y+h*0.9)+'" font-size="'+(Math.min(w,h)*0.06)+'" fill="'+p.acc+'" font-family="Georgia,serif" text-anchor="middle" font-style="italic" textLength="'+(w*0.9)+'" lengthAdjust="spacingAndGlyphs">'+esc(line)+'</text>'; }
+  return out;
+}
+var PIECES={
+  signet:function(p){ return '<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="'+p.obj+'"/><circle cx="200" cy="150" r="118" fill="none" stroke="'+p.acc+'" stroke-width="3" stroke-dasharray="8 6"/>'+compose(100,50,200,200,p,{small:true})+'</svg>'; },
+  bizcard:function(p){ return '<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg"><rect width="700" height="420" fill="#0a0806"/><rect x="20" y="20" width="320" height="183" rx="10" fill="'+p.obj+'" stroke="'+p.acc+'"/>'+compose(40,30,280,165,p,{small:true})+'<rect x="360" y="20" width="320" height="183" rx="10" fill="'+(p.obj==="#efe3cf"?"#171310":"#efe3cf")+'"/><image href="bsa-qr-booth.png" x="380" y="40" width="140" height="140"/><text x="535" y="80" font-size="18" font-family="Georgia,serif" fill="'+(p.obj==="#efe3cf"?"#efe3cf":"#241a10")+'">Design your own</text><text x="535" y="104" font-size="12" fill="'+(p.obj==="#efe3cf"?"#a8917a":"#6d5942")+'" font-family="system-ui,sans-serif">Pen, knife, or wallet.</text><text x="535" y="122" font-size="12" fill="'+(p.obj==="#efe3cf"?"#a8917a":"#6d5942")+'" font-family="system-ui,sans-serif">Scan, build it, send it.</text><text x="535" y="160" font-size="11" fill="'+p.acc+'" font-family="system-ui,sans-serif">Facebook: Bright Sword Artisan</text><text x="350" y="260" font-size="13" fill="#6d5942" text-anchor="middle" font-family="system-ui,sans-serif">Front and back, 3.5 x 2 in</text></svg>'; },
+  shirt:function(p){ return '<svg viewBox="0 0 400 340" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="340" fill="#0a0806"/><path d="M140 40 l-68 40 28 52 32 -18 v176 h136 v-176 l32 18 28 -52 -68 -40 a34 24 0 0 1 -120 0 z" fill="'+p.obj+'" stroke="#3a2c1f"/>'+compose(120,110,160,140,p)+'</svg>'; },
+  hat:function(p){ return '<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="#0a0806"/><path d="M80 190 q0 -110 120 -110 q120 0 120 110 z" fill="'+p.obj+'" stroke="#3a2c1f"/><path d="M56 190 h288 q20 0 20 16 q0 12 -20 12 h-288 q-20 0 -20 -12 q0 -16 20 -16 z" fill="'+(p.obj==="#efe3cf"?"#dccbb0":"#0f0c09")+'" stroke="#3a2c1f"/><rect x="140" y="112" width="120" height="70" rx="8" fill="'+(p.obj==="#efe3cf"?"#171310":"#5c3a24")+'" stroke="'+p.acc+'" stroke-dasharray="5 4"/>'+compose(148,116,104,62,p,{small:true})+'</svg>'; },
+  sticker:function(p){ return '<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="#0a0806"/><circle cx="200" cy="150" r="128" fill="#efe3cf"/><circle cx="200" cy="150" r="112" fill="'+p.obj+'"/>'+compose(110,60,180,180,p)+'</svg>'; },
+  tote:function(p){ return '<svg viewBox="0 0 400 340" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="340" fill="#0a0806"/><path d="M130 110 q0 -70 70 -70 q70 0 70 70" fill="none" stroke="'+(p.obj==="#efe3cf"?"#c7b291":"#3a2c1f")+'" stroke-width="10"/><rect x="80" y="110" width="240" height="210" rx="10" fill="'+p.obj+'" stroke="#3a2c1f"/>'+compose(110,140,180,150,p)+'</svg>'; },
+  tablecard:function(p){ return '<svg viewBox="0 0 400 480" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="480" fill="#0a0806"/><rect x="60" y="20" width="280" height="440" rx="10" fill="'+p.obj+'"/><rect x="72" y="32" width="256" height="416" rx="6" fill="none" stroke="'+p.acc+'" stroke-dasharray="6 5"/><text x="200" y="70" font-size="11" letter-spacing="4" fill="'+p.acc+'" text-anchor="middle" font-family="system-ui,sans-serif">DESIGN YOUR OWN</text><text x="200" y="104" font-size="26" fill="'+p.ink+'" text-anchor="middle" font-family="Georgia,serif">Pen. Knife. Wallet.</text><rect x="120" y="126" width="160" height="160" fill="#efe3cf" rx="6"/><image href="bsa-qr-booth.png" x="126" y="132" width="148" height="148"/><text x="200" y="322" font-size="13" fill="'+p.ink+'" text-anchor="middle" font-family="Georgia,serif" font-style="italic">Scan, pick the parts, hand Jacob the phone.</text><text x="200" y="354" font-size="10" letter-spacing="3" fill="'+p.acc+'" text-anchor="middle" font-family="system-ui,sans-serif">BUILT AT THE BOOTH</text>'+compose(140,370,120,70,p,{small:true})+'</svg>'; },
+  priceboard:function(p){ var rows=D.prices.slice(0,7), y=150, out=""; rows.forEach(function(r){ out+='<text x="60" y="'+y+'" font-size="15" fill="'+p.ink+'" font-family="Georgia,serif">'+esc(r.name)+'</text><text x="340" y="'+y+'" font-size="15" fill="'+p.acc+'" text-anchor="end" font-family="Georgia,serif">$'+r.price+'</text><line x1="60" y1="'+(y+8)+'" x2="340" y2="'+(y+8)+'" stroke="'+p.acc+'" stroke-dasharray="2 4" opacity=".6"/>'; y+=34; }); return '<svg viewBox="0 0 400 480" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="480" fill="#0a0806"/><rect x="24" y="20" width="352" height="440" rx="8" fill="'+p.obj+'"/><rect x="36" y="32" width="328" height="416" rx="5" fill="none" stroke="'+p.acc+'" stroke-dasharray="6 5"/>'+compose(140,44,120,84,p,{small:true})+'<text x="200" y="134" font-size="9" letter-spacing="4" fill="'+p.acc+'" text-anchor="middle" font-family="system-ui,sans-serif">THE BOARD</text>'+out+'<text x="200" y="'+(y+18)+'" font-size="12" fill="'+p.acc+'" text-anchor="middle" font-family="Georgia,serif" font-style="italic">'+esc(fLine())+'</text></svg>'; },
+  banner:function(p){ return '<svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg"><rect width="600" height="300" fill="#0a0806"/><rect x="10" y="30" width="580" height="240" rx="6" fill="'+p.obj+'"/><rect x="24" y="44" width="552" height="212" rx="4" fill="none" stroke="'+p.acc+'" stroke-dasharray="8 6"/>'+[[24,44],[576,44],[24,256],[576,256],[300,44],[300,256]].map(function(g){return '<circle cx="'+g[0]+'" cy="'+g[1]+'" r="6" fill="#0a0806" stroke="#8a7350" stroke-width="2"/>';}).join("")+compose(60,60,480,180,p)+'</svg>'; },
+  flyer:function(p){ return '<svg viewBox="0 0 400 520" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="520" fill="#0a0806"/><rect x="40" y="10" width="320" height="500" fill="'+p.obj+'"/>'+compose(60,26,280,150,p)+'<image href="bsa-toolroll.jpg" x="60" y="190" width="280" height="150" preserveAspectRatio="xMidYMid slice"/>'+["Wallets and clutches","Bags, slings, duffels","Belts and straps","Hand-turned pens","Knives with sheaths","Custom work"].map(function(t,i){ return '<text x="'+(60+(i%2)*150)+'" y="'+(366+Math.floor(i/2)*20)+'" font-size="11" fill="'+p.ink+'" font-family="system-ui,sans-serif">◆ '+esc(t)+'</text>'; }).join("")+'<image href="bsa-qr-booth.png" x="60" y="430" width="60" height="60"/><text x="130" y="452" font-size="12" fill="'+p.ink+'" font-family="Georgia,serif">Design your own</text><text x="130" y="470" font-size="9" fill="'+p.acc+'" font-family="system-ui,sans-serif">Scan to build a pen, knife, or wallet</text><text x="130" y="484" font-size="9" fill="'+p.acc+'" font-family="system-ui,sans-serif">Massillon, Ohio · find us on Facebook</text></svg>'; },
+  letterhead:function(p){ return '<svg viewBox="0 0 400 520" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="520" fill="#0a0806"/><rect x="40" y="10" width="320" height="500" fill="'+p.obj+'"/>'+compose(60,24,280,70,p,{small:true})+'<line x1="60" y1="104" x2="340" y2="104" stroke="'+p.ink+'" stroke-width="2"/>'+[0,1,2,3,4,5,6].map(function(i){ return '<rect x="60" y="'+(130+i*22)+'" width="'+(i===2?200:i===5?140:280)+'" height="6" rx="3" fill="'+p.ink+'" opacity=".12"/>'; }).join("")+'<line x1="60" y1="470" x2="340" y2="470" stroke="'+p.acc+'" stroke-dasharray="3 4"/><text x="60" y="488" font-size="8" letter-spacing="2" fill="'+p.acc+'" font-family="system-ui,sans-serif">FACEBOOK: BRIGHT SWORD ARTISAN</text><text x="340" y="488" font-size="8" letter-spacing="2" fill="'+p.acc+'" text-anchor="end" font-family="system-ui,sans-serif">CASH · PAYPAL · CASH APP</text></svg>'; },
+  insert:function(p){ return '<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="#0a0806"/><rect x="50" y="40" width="300" height="220" rx="8" fill="'+p.obj+'" transform="rotate(-2 200 150)"/><text x="200" y="118" font-size="30" fill="'+p.ink+'" text-anchor="middle" font-family="Georgia,serif" font-style="italic">Thank you.</text><text x="200" y="150" font-size="12" fill="'+p.acc+'" text-anchor="middle" font-family="Georgia,serif" font-style="italic">'+esc(fLine())+'</text><text x="200" y="186" font-size="10" fill="'+p.ink+'" text-anchor="middle" font-family="system-ui,sans-serif" opacity=".8">Condition it twice a year. Keep it dry. Bring it back for repairs.</text><text x="200" y="214" font-size="9" letter-spacing="2" fill="'+p.acc+'" text-anchor="middle" font-family="system-ui,sans-serif">TELL A FRIEND · FIND US ON FACEBOOK</text></svg>'; },
+  tag:function(p){ return '<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="#0a0806"/><path d="M90 90 h200 l40 60 -40 60 h-200 z" fill="'+(p.obj==="#efe3cf"?"#a9805a":"#5c3a24")+'" stroke="#3a2c1f"/><circle cx="300" cy="150" r="7" fill="#0a0806" stroke="#c9973f"/><path d="M100 100 h180 l32 50 -32 50 h-180 z" fill="none" stroke="'+p.acc+'" stroke-dasharray="4 4"/>'+compose(104,104,170,92,p,{small:true})+'</svg>'; }
+};
+function renderForge(){
+  var a=artById(FORGE.id); if(!a) return; var p=PAL[FORGE.ground];
+  $("forgeName").textContent=a.name; $("forgePreview").innerHTML=PIECES[a.design](p);
+  document.querySelectorAll("[data-fl]").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-fl")===FORGE.layout); });
+  document.querySelectorAll("[data-fg]").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-fg")===FORGE.ground); });
+}
+function openForge(id){
+  var a=artById(id); if(!a||!a.design) return; var d=Q.designs[id]||{};
+  FORGE={id:id,layout:d.layout||"a",ground:d.ground||"coal",line:d.line||0,custom:d.custom||""};
+  var sel=$("forgeLine"); sel.innerHTML=LINES.map(function(l,i){ return '<option value="'+i+'"'+(i===FORGE.line?' selected':'')+'>'+esc(l)+'</option>'; }).join(""); $("forgeCustom").value=FORGE.custom;
+  $("forgeSpec").style.display="none"; $("forge").classList.add("on"); document.body.style.overflow="hidden"; renderForge();
+}
+function forgeSpec(id){ var a=artById(id), d=Q.designs[id]||FORGE; return "BRIGHT SWORD · DESIGN HANDOFF (Mot makes the print file, Jacob orders the printing)\nPiece: "+a.name+"\nLayout: "+({a:"mark",b:"mark and name",c:"name"}[d.layout])+"\nGround: "+d.ground+"\nLine: "+(d.custom||LINES[d.line])+"\nRequested: "+qToday(); }
+var LOGO_CACHE={};
+function logoData(src, cb){ if (LOGO_CACHE[src]){ cb(LOGO_CACHE[src]); return; } fetch(src).then(function(r){return r.blob();}).then(function(b){ var fr=new FileReader(); fr.onload=function(){ LOGO_CACHE[src]=fr.result; cb(fr.result); }; fr.readAsDataURL(b); }).catch(function(){ cb(null); }); }
+function svgToPng(svg, w, name){
+  var srcs=[]; svg.replace(/href="([^"]+)"/g,function(m,s){ if(srcs.indexOf(s)===-1) srcs.push(s); return m; });
+  var done=0; if(!srcs.length) go(svg);
+  srcs.forEach(function(s){ logoData(s,function(d){ if(d) svg=svg.split('href="'+s+'"').join('href="'+d+'"'); done++; if(done===srcs.length) go(svg); }); });
+  function go(sv){
+    var m=sv.match(/viewBox="0 0 (\d+) (\d+)"/), vw=Number(m[1]), vh=Number(m[2]); var scale=w/vw;
+    var c=document.createElement("canvas"); c.width=Math.round(vw*scale); c.height=Math.round(vh*scale); var ctx=c.getContext("2d");
+    var im=new Image(); im.onload=function(){ ctx.drawImage(im,0,0,c.width,c.height); c.toBlob(function(b){ var a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download=name; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },500); toast("Saved to Downloads"); },"image/png"); };
+    im.onerror=function(){ toast("Could not render. Send the spec to Mot instead."); };
+    im.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(sv);
+  }
+}
+/* ================= THE HERALD ================= */
+var HTPL=[
+ {id:"announce",name:"Find the booth",photo:"bsa-booth-jacob.jpg",kick:"Find the booth",title:"Saturday at the show",sub:"Holiday craft show, Massillon, 9a to 3p",foot:"Bright Sword Artisan · Massillon, Ohio",unlock:"free"},
+ {id:"wip",name:"Work in progress",photo:"bsa-kitchenknife.jpg",kick:"Work in progress",title:"On the stone this morning",sub:"Finished piece at the show Saturday",foot:"Bright Sword Artisan",unlock:"free"},
+ {id:"newbench",name:"New on the bench",photo:"bsa-resinpens.jpg",kick:"New on the bench",title:"Seventeen pens, no two alike",sub:"They go to the next show first",foot:"Bright Sword Artisan on Facebook",unlock:"q:wip",plain:"Post one WIP photo"},
+ {id:"thanks",name:"After the show",photo:"bsa-booth-wide.jpg",kick:"After the show",title:"Thank you, Massillon",sub:"Back at the bench Monday, next show below",foot:"Bright Sword Artisan",unlock:"q:firstlog",plain:"Log your first sale"},
+ {id:"custom",name:"Custom work",photo:"bsa-toolroll.jpg",kick:"Custom work",title:"If you can think of it",sub:"Send the idea, get a quote before any work starts",foot:"Design your own at the booth",unlock:"q:firstorder",plain:"Save your first custom order"}
+];
+var H={tpl:"announce",photo:null,story:false};
+function tplUnlocked(t){ if (t.unlock==="free") return true; if (t.unlock.indexOf("q:")===0) return !!Q.done[t.unlock.slice(2)]; return false; }
+function renderHerald(){
+  if (!$("heraldTpl")) return;
+  $("heraldTpl").innerHTML=HTPL.map(function(t){ var un=tplUnlocked(t); return '<button data-htpl="'+t.id+'" class="'+(H.tpl===t.id?"on":"")+'"'+(un?"":' disabled style="opacity:.45"')+'>'+esc(t.name)+(un?"":" · "+esc(t.plain))+'</button>'; }).join("");
+}
+function loadTpl(id){ var t=HTPL.filter(function(x){return x.id===id;})[0]; if(!t) return; H.tpl=id; $("hKick").value=t.kick; $("hTitle").value=t.title; $("hSub").value=t.sub; $("hFoot").value=t.foot; renderHerald(); heraldRender(); }
+function heraldRender(){
+  var c=$("hCanvas"); if(!c) return; var W=1080, Hh=H.story?1920:1080; c.width=W; c.height=Hh; var ctx=c.getContext("2d");
+  var t=HTPL.filter(function(x){return x.id===H.tpl;})[0];
+  function draw(img){
+    ctx.fillStyle="#171310"; ctx.fillRect(0,0,W,Hh);
+    if (img){ var s=Math.max(W/img.width,Hh/img.height); var dw=img.width*s, dh=img.height*s; ctx.drawImage(img,(W-dw)/2,(Hh-dh)/2,dw,dh); ctx.fillStyle="rgba(23,19,16,.62)"; ctx.fillRect(0,0,W,Hh); }
+    var g=ctx.createRadialGradient(W/2,Hh*1.05,10,W/2,Hh*1.05,W*0.7); g.addColorStop(0,"rgba(255,122,47,.45)"); g.addColorStop(1,"rgba(255,122,47,0)"); ctx.fillStyle=g; ctx.fillRect(0,0,W,Hh);
+    ctx.strokeStyle="#c9973f"; ctx.lineWidth=4; ctx.setLineDash([18,12]); ctx.strokeRect(W*0.045,W*0.045,W*0.91,Hh-W*0.09); ctx.setLineDash([]);
+    ctx.textAlign="center"; ctx.fillStyle="#c9973f"; ctx.font="500 28px system-ui,sans-serif"; ctx.fillText(($("hKick").value||"").toUpperCase().split("").join(String.fromCharCode(8202)), W/2, Hh*0.40);
+    ctx.fillStyle="#efe3cf"; ctx.font="bold 118px Georgia,serif"; var lines=wrap(ctx,$("hTitle").value||"",W*0.84); var y=Hh*0.40+150; lines.slice(0,3).forEach(function(l){ ctx.fillText(l,W/2,y); y+=132; });
+    ctx.fillStyle="#cdb99c"; ctx.font="italic 44px Georgia,serif"; wrap(ctx,$("hSub").value||"",W*0.86).slice(0,2).forEach(function(l){ y+=14; ctx.fillText(l,W/2,y); y+=58; });
+    ctx.fillStyle="#a8917a"; ctx.font="500 26px system-ui,sans-serif"; ctx.fillText(($("hFoot").value||"").toUpperCase(), W/2, Hh-Hh*0.085);
+    logoData("bsa-logo.png", function(d){ if(!d) return; var li=new Image(); li.onload=function(){ var m=W*0.19; ctx.drawImage(li,W/2-m/2,Hh*0.22-m/2,m,m); }; li.src=d; });
+  }
+  function wrap(ctx,text,maxW){ var words=text.split(" "), out=[], cur=""; words.forEach(function(w){ var test=cur?cur+" "+w:w; if (ctx.measureText(test).width>maxW && cur){ out.push(cur); cur=w; } else cur=test; }); if(cur) out.push(cur); return out; }
+  if (H.photo){ draw(H.photo); } else { var im=new Image(); im.onload=function(){ draw(im); }; im.onerror=function(){ draw(null); }; im.src=t.photo; }
+}
+document.addEventListener("click", function(e){
+  var t=e.target;
+  var fg=t.closest("[data-forge]"); if (fg){ openForge(fg.getAttribute("data-forge")); return; }
+  var fs=t.closest("[data-forgesend]"); if (fs){ var txt=forgeSpec(fs.getAttribute("data-forgesend")); if (navigator.share){ navigator.share({text:txt}).catch(function(){}); } else if (navigator.clipboard) { navigator.clipboard.writeText(txt).then(function(){ toast("Copied for Mot"); }).catch(function(){ toast("Open the piece and use Send to Mot"); }); } return; }
+  if (t.closest("#forgeClose")){ $("forge").classList.remove("on"); document.body.style.overflow=""; renderArmory(); return; }
+  var fl=t.closest("[data-fl]"); if (fl){ FORGE.layout=fl.getAttribute("data-fl"); renderForge(); return; }
+  var fgd=t.closest("[data-fg]"); if (fgd){ FORGE.ground=fgd.getAttribute("data-fg"); renderForge(); return; }
+  if (t.closest("#forgeSave")){ Q.designs[FORGE.id]={layout:FORGE.layout,ground:FORGE.ground,line:FORGE.line,custom:FORGE.custom}; if (!Q.done["forge:"+FORGE.id]){ Q.done["forge:"+FORGE.id]=1; award(25,"smith","Forged: "+artById(FORGE.id).name); } saveCore(); toast("Design saved"); flushReveals(); return; }
+  if (t.closest("#forgePng")){ var a=artById(FORGE.id); svgToPng(PIECES[a.design](PAL[FORGE.ground]), 1600, "brightsword-"+a.design+".png"); return; }
+  if (t.closest("#forgeSend")){ Q.designs[FORGE.id]={layout:FORGE.layout,ground:FORGE.ground,line:FORGE.line,custom:FORGE.custom}; saveCore(); var sp=$("forgeSpec"); sp.textContent=forgeSpec(FORGE.id); sp.style.display="block"; var txt2=sp.textContent; if (navigator.share){ navigator.share({text:txt2}).catch(function(){}); } else if (navigator.clipboard){ navigator.clipboard.writeText(txt2).then(function(){ toast("Copied for Mot"); }).catch(function(){ toast("Copy the text below"); }); } return; }
+  var ht=t.closest("[data-htpl]"); if (ht && !ht.disabled){ loadTpl(ht.getAttribute("data-htpl")); return; }
+  if (t.closest("#hPick")){ var inp=document.createElement("input"); inp.type="file"; inp.accept="image/*"; inp.onchange=function(){ var f=inp.files[0]; if(!f) return; var r=new FileReader(); r.onload=function(){ var im=new Image(); im.onload=function(){ H.photo=im; $("hPickName").textContent=f.name; heraldRender(); }; im.src=r.result; }; r.readAsDataURL(f); }; inp.click(); return; }
+  if (t.closest("#hRender")){ heraldRender(); return; }
+  if (t.closest("#hStory")){ H.story=!H.story; t.closest("#hStory").textContent=H.story?"Square size":"Story size"; heraldRender(); return; }
+  if (t.closest("#hDownload")){ var c=$("hCanvas"); c.toBlob(function(b){ var a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="brightsword-post-"+H.tpl+(H.story?"-story":"")+".png"; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },500); if (!Q.done["herald:first"]){ Q.done["herald:first"]=1; award(20,"chronicler","First post from the Herald"); saveCore(); } toast("Saved to Downloads"); },"image/png"); return; }
+});
+document.addEventListener("change", function(e){ if (e.target.id==="forgeLine"){ FORGE.line=Number(e.target.value); FORGE.custom=""; $("forgeCustom").value=""; renderForge(); } });
+document.addEventListener("input", function(e){ if (e.target.id==="forgeCustom"){ FORGE.custom=e.target.value; renderForge(); } if (e.target.closest && e.target.closest("#p-herald")) heraldRender(); });
+
+/* ---------- renders ---------- */
+function renderQuest(){
+  if (!$("p-quest")) return;
+  var l=level(), next=LEVELS[l]||LEVELS[LEVELS.length-1], prev=LEVELS[l-1]||0;
+  $("qName").textContent="Jacob, "+titleFor(l);
+  $("qTitle").textContent="Level "+l+" · "+(l>=12?"campaign complete":ARCS[currentArc()-1].name);
+  $("qXp").style.width=(l>=12?100:Math.min(100,Math.round((Q.xp-prev)/(next-prev)*100)))+"%";
+  $("qXpTxt").textContent=Q.xp+" XP"; $("qNext").textContent=(l>=12?"max":(next-Q.xp)+" to next");
+  (function(){ var host=$("qPortrait"); if (!host.getAttribute("data-set")){ host.innerHTML='<svg viewBox="0 0 40 40"><circle cx="20" cy="14" r="8" fill="#c9973f"/><path d="M6 36 q14 -16 28 0 z" fill="#c9973f"/></svg>'; host.setAttribute("data-set","1"); var im=new Image(); im.onload=function(){ host.innerHTML=""; host.appendChild(im); }; im.alt=""; im.src="q-portrait.png"; } })();
+  $("qSkills").innerHTML=SKILLS.map(function(s){ var r=rank(s), p=""; for (var i=1;i<=5;i++) p+='<i class="'+(i<=r?"on":"")+'"></i>'; return '<div class="skill"><div class="pips">'+p+'</div>'+SKILL_NAMES[s]+'</div>'; }).join("");
+  var arc=ARCS[currentArc()-1];
+  $("dmLine").textContent= Q.zeroDone ? arc.dm : "Session Zero waits. Speak your name, tell your origin, mark your roads. The campaign cannot start until the realm knows you.";
+  var mains=QUESTS.filter(function(q){return q.arc===arc.n && q.type==="main";});
+  var stops=mains.map(function(q,i){ return '<span class="stop '+(isDone(q)?"done":"")+'" style="left:'+Math.round((i+0.5)/mains.length*88)+'%"></span>'; }).join("");
+  var fb=bossById(arc.finalBoss), dead=Q.bosses[fb.id]&&Q.bosses[fb.id].dead;
+  $("arcMap").innerHTML='<div class="arcsub">Arc '+arc.n+' · '+esc(arc.sub)+'</div><div class="arcname">'+esc(arc.name)+'</div><div class="road">'+stops+'<span class="boss '+(dead?"dead":"")+'"><b>&#9760;&#xFE0E;</b></span></div><div class="muted">'+mains.filter(isDone).length+' of '+mains.length+' main quests · boss: '+esc(fb.name)+(dead?" (defeated)":"")+'</div>';
+  var hs=handSize();
+  $("handInfo").textContent=(Q.hand.cards.length)+" of "+hs+" cards · sweeps "+(Q.hand.sweeps||0);
+  if (!Q.zeroDone){ $("handHost").innerHTML='<div class="card" style="flex:0 0 100%;min-height:0"><div class="body"><div class="type">Session Zero</div><div class="title">Character creation</div><div class="lore">Five questions. Fifty XP each. The Signet at the end.</div><div class="act"><button class="go" id="zeroStart">Begin Session Zero</button></div></div></div>'; $("handActions").innerHTML=""; return; }
+  if (!Q.hand.cards.length){ $("handHost").innerHTML='<div class="card" style="flex:0 0 100%;min-height:0"><div class="body"><div class="type">Draw</div><div class="title">Your hand is empty</div><div class="lore">Pick up to '+hs+' cards from the library. At least one Chronicler card. At most one boss.</div><div class="act"><button class="go" data-pane="library">Open the library</button><button id="autoDraw">Draw for me</button></div></div></div>'; }
+  else { $("handHost").innerHTML=Q.hand.cards.map(function(id){ var q=qById(id); return q?cardHTML("quest",q,{actions:true,inhand:true}):""; }).join(""); }
+  $("handActions").innerHTML='';
+}
+function renderLibrary(){
+  if (!$("libHost")) return; var f=Q.libFilter||"all", h="";
+  var all=[]; QUESTS.forEach(function(q){ if (!q.hidden || Q.sidesUnlocked.indexOf(q.id)!==-1) all.push(["quest",q]); }); ABILITIES.forEach(function(a){ all.push(["ability",a]); }); ARTIFACTS.forEach(function(a){ all.push(["artifact",a]); });
+  all.forEach(function(x){ var kind=x[0], o=x[1];
+    if (f!=="all" && f!==kind && f!==o.skill) return;
+    if (kind==="quest"){ var un=isUnlocked(o); if (!un && o.arc>currentArc()+1) return; h+=cardHTML("quest",o,{actions:un,locked:!un,inhand:Q.hand.cards.indexOf(o.id)!==-1}); }
+    else h+=cardHTML(kind,o,{});
+  });
+  $("libHost").innerHTML=h||'<div class="empty">Nothing here yet.</div>';
+}
+function renderBosses(){
+  if (!$("bossHost")) return; var h="";
+  BOSSES.forEach(function(b){ if (!arcUnlocked(b.arc)) return; var st=bossState(b), hits=b.steps.filter(function(s){return st.hits[s.id];}).length;
+    h+='<div class="bosscard'+(st.dead?" dead":"")+'" data-boss="'+b.id+'"><div class="strike"></div><div class="bsub">Arc '+b.arc+' · '+esc(b.sub)+'</div><div class="bname">'+esc(b.name)+'</div><div class="dm" style="margin-top:6px">'+esc(b.dm)+'</div><div class="hp">'+b.steps.map(function(s){return '<i class="'+(st.hits[s.id]?"gone":"")+'"></i>';}).join("")+'</div>'
+      + b.steps.map(function(s){ return '<div class="bstep'+(st.hits[s.id]?" hit":"")+'"><div class="t">'+esc(s.lore)+'<i>'+esc(s.task)+'</i></div>'+(st.hits[s.id]?'<span class="muted">struck</span>':(s.tap?'<button data-bstrike="'+b.id+':'+s.id+'">Strike</button>':'<span class="badge auto">auto</span>'))+'</div>'; }).join("")
+      + '<div class="muted" style="margin-top:8px">'+hits+' of '+b.steps.length+' · '+b.xp+' XP · loot: '+esc(artById(b.loot).name)+'</div></div>'; });
+  $("bossHost").innerHTML=h||'<div class="empty">No bosses yet.</div>';
+}
+function renderJournal(){
+  if (!$("journalHost")) return;
+  var done=Object.keys(Q.done).length, arts=Object.keys(Q.artifacts).length, kills=BOSSES.filter(function(b){return Q.bosses[b.id]&&Q.bosses[b.id].dead;}).length;
+  $("journalDm").textContent = level()>=12 ? "The campaign is complete. Year Two is new game plus: same roads, your own numbers to beat." : "What you have done, in order. The raven sends this to Mot.";
+  $("journalKpi").innerHTML='<div><small>Quests</small><b>'+done+'</b></div><div><small>Bosses</small><b>'+kills+'</b></div><div><small>Artifacts</small><b>'+arts+'</b></div>';
+  $("journalHost").innerHTML=Q.journal.slice(0,80).map(function(j){ return '<div class="item"><div class="t"><b>'+esc(j.t)+'</b><span>'+fmtDate(j.d)+' · '+esc(SKILL_NAMES[j.s]||"")+'</span></div><span class="big" style="font-size:16px">+'+j.xp+'</span></div>'; }).join("")||'<div class="empty">Nothing yet. The first entry is Session Zero.</div>';
+}
+function renderGame(){ renderQuest(); renderLibrary(); renderBosses(); renderJournal(); renderArmory(); renderHerald(); if (H.tpl && $("hTitle") && !$("hTitle").value) loadTpl(H.tpl); }
+
+/* ---------- reveals ---------- */
+function flushReveals(){ if (!REVEAL_QUEUE.length) return; if ($("p-log") && $("p-log").classList.contains("on")) return; if ($("reveal").classList.contains("on")) return; var r=REVEAL_QUEUE.shift(); $("revealKick").textContent=r.kick; $("revealTitle").textContent=r.title; $("revealXp").textContent=r.xp||""; $("revealCard").innerHTML=r.card||""; $("revealDm").textContent=r.dm||""; $("reveal").classList.add("on"); }
+
+/* ---------- session zero ---------- */
+var ZERO=[
+ {k:"name",prompt:"Speak your name as the realm will know it.",plain:"Exactly how the top of your site should read. \"Bright Sword Artisan\", or with a tagline under it."},
+ {k:"origin",prompt:"Every artisan has an origin. Tell yours.",plain:"Three sentences. How you started, why leather and wood and steel. This becomes the site's story."},
+ {k:"guild",prompt:"Where does the guild find you?",plain:"Paste the link to your Facebook page."},
+ {k:"roads",prompt:"Mark the roads you will travel.",plain:"Your show list: name, city, date, hours. As many as you know. (They also go on the Shows tab.)"},
+ {k:"prices",prompt:"Set your prices at the board.",plain:"The site's design-your-own builders use sample prices. Correct them: pen styles, blade sizes, steels, woods, leathers, upcharges."}
+];
+var zeroI=0;
+function showZero(){ var z=ZERO[zeroI]; $("zeroStep").textContent="Session Zero · "+(zeroI+1)+" of 5"; $("zeroPrompt").textContent=z.prompt; $("zeroPlain").textContent=z.plain; $("zeroInput").value=Q.zero[z.k]||""; $("zero").classList.add("on"); }
+function zeroNext(){ var z=ZERO[zeroI], v=$("zeroInput").value.trim(); if(!v){ toast("Speak it, or tap Later"); return; } var first=!Q.zero[z.k]; Q.zero[z.k]=v; if (first) award(50,["merchant","smith","chronicler","scout","merchant"][zeroI],"Session Zero: "+z.prompt); zeroI++;
+  if (zeroI>=ZERO.length){ Q.zeroDone=true; Q.zero.date=qToday(); $("zero").classList.remove("on"); armoryCheck(); REVEAL_QUEUE.push({kick:"Session Zero complete",title:"The realm knows you",xp:"The Signet",card:cardHTML("artifact",artById("signet"),{}),dm:"Send a raven to Mot from the Journal tab. He carves your answers into the site, and the campaign begins."}); saveCore(); renderGame(); flushReveals(); return; }
+  saveCore(); showZero(); }
+
+/* ---------- opening ---------- */
+function playOpening(){
+  var ov=$("opening"); ov.classList.add("on"); $("openBegin").classList.remove("on"); $("d20").classList.remove("on","roll"); $("rollHint").classList.remove("on"); $("openSub").classList.remove("on"); $("rollResult").textContent=""; $("d20n").textContent="";
+  var reduced=window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var sp=$("sparks"); sp.innerHTML=""; sp.classList.remove("go");
+  for (var i=0;i<22;i++){ var e=document.createElement("span"); var a=Math.PI*(1.05+Math.random()*0.9), d=28+Math.random()*80; e.style.setProperty("--dx",(Math.cos(a)*d).toFixed(0)+"px"); e.style.setProperty("--dy",(Math.sin(a)*d-10).toFixed(0)+"px"); e.style.animationDelay=(Math.random()*0.08).toFixed(2)+"s"; sp.appendChild(e); }
+  var h=ov.querySelector(".hammer"), wrap=$("anvilwrap"), fl=$("flash"), hot=ov.querySelector(".hotline"), t=$("openTitle");
+  h.classList.remove("drop","lift"); h.onanimationend=null; t.classList.remove("burn"); void h.offsetWidth; void t.offsetWidth;
+  function finish(){ t.classList.add("burn"); setTimeout(function(){ $("openSub").classList.add("on"); $("d20").classList.add("on"); $("rollHint").classList.add("on"); },1200); }
+  if (reduced){ finish(); return; }
+  function impact(){ [sp,fl,hot,wrap].forEach(function(el){ el.classList.remove("go","on","shake"); void el.offsetWidth; }); sp.classList.add("go"); fl.classList.add("on"); hot.classList.add("on"); wrap.classList.add("shake"); }
+  var strikes=0;
+  function dropIt(){ h.classList.remove("lift"); void h.offsetWidth; h.classList.add("drop"); }
+  h.onanimationend=function(ev){
+    if (ev.animationName==="drop"){ impact(); strikes++; h.classList.remove("drop"); void h.offsetWidth; h.classList.add("lift"); }
+    else if (ev.animationName==="lift"){ if (strikes<3) setTimeout(dropIt, 120); else { h.classList.remove("lift"); setTimeout(finish, 250); } }
+  };
+  setTimeout(dropIt, 500);
+}
+function rollD20(){ var d=$("d20"); if (d.classList.contains("roll")) return; d.classList.add("roll"); var n=1+Math.floor(Math.random()*20); setTimeout(function(){ $("d20n").textContent=n; Q.initiative=n; var line = n===20 ? "Natural twenty. The Hearthstone is yours on day one." : n>=15 ? "A strong roll. One extra card in your first hand." : n>=8 ? "Steady. The road is open." : "The dice are cruel. The forge is not. Begin anyway."; $("rollResult").textContent=line; if (n===20) Q.artifacts.hearthstone=qToday(); $("openBegin").classList.add("on"); saveCore(); },1200); }
+
+/* ---------- photos (small, capped) ---------- */
+function attachPhoto(qid, file){ var r=new FileReader(); r.onload=function(){ var im=new Image(); im.onload=function(){ var c=document.createElement("canvas"); var s=Math.min(1,320/Math.max(im.width,im.height)); c.width=Math.round(im.width*s); c.height=Math.round(im.height*s); c.getContext("2d").drawImage(im,0,0,c.width,c.height); var keys=Object.keys(Q.photos); if (keys.length>=40) delete Q.photos[keys[0]]; Q.photos[qid+":"+Date.now()]=c.toDataURL("image/jpeg",0.6); saveCore(); toast("Photo attached"); }; im.src=r.result; }; r.readAsDataURL(file); }
+
+/* ---------- raven ---------- */
+function ravenText(){ var l=level(); var lines=["BRIGHT SWORD · THE FORGE YEAR","Jacob · Level "+l+" "+titleFor(l)+" · "+Q.xp+" XP","Arc "+currentArc()+": "+ARCS[currentArc()-1].name,"Skills: "+SKILLS.map(function(s){return SKILL_NAMES[s]+" "+rank(s);}).join(", "),"Quests done: "+Object.keys(Q.done).length+" · Bosses: "+BOSSES.filter(function(b){return Q.bosses[b.id]&&Q.bosses[b.id].dead;}).length+" · Artifacts: "+Object.keys(Q.artifacts).length,""]; if (Q.zeroDone){ lines.push("SESSION ZERO"); ZERO.forEach(function(z){ lines.push(z.k.toUpperCase()+": "+(Q.zero[z.k]||"")); }); } return lines.join("\n"); }
+
+/* ---------- events ---------- */
+document.addEventListener("click", function(e){
+  var t=e.target;
+  if (t.closest("#zeroStart")){ zeroI=0; showZero(); return; }
+  if (t.closest("#zeroNext")){ zeroNext(); return; }
+  if (t.closest("#zeroLater")){ $("zero").classList.remove("on"); saveCore(); return; }
+  if (t.closest("#revealOk")){ $("reveal").classList.remove("on"); renderGame(); flushReveals(); return; }
+  if (t.closest("#d20")){ rollD20(); return; }
+  if (t.closest("#openBegin")){ $("opening").classList.remove("on"); Q.opened=true; saveCore(); if (!Q.zeroDone){ zeroI=0; showZero(); } return; }
+  if (t.closest("#replayOpening")){ playOpening(); return; }
+  var qd=t.closest("[data-qdone]"); if (qd){ var q=qById(qd.getAttribute("data-qdone")); if (q){ completeQuest(q); markHandDone(q.id); questCheck(); } return; }
+  var qh=t.closest("[data-qhand]"); if (qh){ toggleHand(qh.getAttribute("data-qhand")); renderLibrary(); return; }
+  var qp=t.closest("[data-qphoto]"); if (qp){ var inp=document.createElement("input"); inp.type="file"; inp.accept="image/*"; inp.onchange=function(){ if(inp.files[0]) attachPhoto(qp.getAttribute("data-qphoto"),inp.files[0]); }; inp.click(); return; }
+  var bs=t.closest("[data-bstrike]"); if (bs){ var p=bs.getAttribute("data-bstrike").split(":"); var b=bossById(p[0]); var st=bossState(b); st.hits[p[1]]=qToday(); var card=bs.closest(".bosscard"); var fx=card.querySelector(".strike"); fx.classList.remove("on"); void fx.offsetWidth; fx.classList.add("on"); questCheck(); renderBosses(); return; }
+  var lf=t.closest("[data-lf]"); if (lf){ Q.libFilter=lf.getAttribute("data-lf"); document.querySelectorAll("[data-lf]").forEach(function(b){ b.classList.toggle("on", b===lf); }); renderLibrary(); return; }
+  if (t.closest("#autoDraw")){ var av=handAvailable().filter(function(q){return Q.hand.cards.indexOf(q.id)===-1;}); var chron=av.filter(function(q){return q.skill==="chronicler";}); var pick=[]; if (chron.length) pick.push(chron[0]); av.forEach(function(q){ if (pick.length<handSize() && pick.indexOf(q)===-1 && (q.type==="main"||pick.length>=2)) pick.push(q); }); av.forEach(function(q){ if (pick.length<handSize() && pick.indexOf(q)===-1) pick.push(q); }); Q.hand.week=weekKey(qToday()); Q.hand.cards=pick.map(function(q){return q.id;}); saveCore(); renderQuest(); return; }
+  if (t.closest("#raven")){ var txt=ravenText(); if (navigator.share){ navigator.share({text:txt}).catch(function(){}); } else if (navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(function(){toast("Copied for Mot");}); } return; }
+});
+/* pane switch hook: game panes render on open */
+document.addEventListener("click", function(e){ var tab=e.target.closest("[data-pane]"); if(!tab) return; var p=tab.getAttribute("data-pane"); if (p==="quest"||p==="library"||p==="bosses"||p==="journal"||p==="armory"||p==="herald") setTimeout(renderGame,0); setTimeout(flushReveals,60); if (p==="bosses"||p==="journal"||p==="quest"||p==="armory"||p==="herald"||p==="library"){ var lit=(p==="armory"||p==="herald"||p==="library")?"library":"quest"; setTimeout(function(){ document.querySelectorAll(".tabs [data-pane]").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-pane")===lit); }); document.querySelectorAll(".qpills [data-pane]").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-pane")===p); }); if (p==="armory") renderArmory(); if (p==="herald"){ renderHerald(); heraldRender(); } },0); } });
+/* patched office hooks fire questCheck via save() */
+
+function renderAll(){ renderShows(); renderLog(); renderPL(); renderOrders(); renderLists(); renderPrices(); renderGame(); }
+renderAll();
+
+/* ---------- boot the campaign ---------- */
+(function(){
+  var wantQuest = /[?&]quest=1/.test(location.search) || !Q.opened;
+  var qtab=document.querySelector('[data-pane="quest"]');
+  if (Q.opened || wantQuest){ document.querySelectorAll("[data-pane]").forEach(function(b){ b.classList.toggle("on", b===qtab); }); document.querySelectorAll(".pane").forEach(function(p){ p.classList.toggle("on", p.id==="p-quest"); }); }
+  renderGame();
+  if (!Q.opened) playOpening();
+  weekTick(); saveCore();
+})();
+
+</script>
+</body>
+</html>
