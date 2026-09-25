@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="build" content="office v3.4">
+<meta name="build" content="office v3.6">
 <meta name="theme-color" content="#171310">
 <title>Bright Sword Back Office</title>
 <link rel="icon" type="image/png" href="bsa-logo.png">
@@ -29,7 +29,7 @@ header small{display:block;color:var(--smoke);font-size:11.5px;letter-spacing:.1
 main{padding:14px 14px 20px;max-width:760px;margin:0 auto}
 .pane{display:none}.pane.on{display:block}
 .card{position:relative;background:var(--hide);border:1px solid var(--hideline);border-radius:14px;padding:14px;margin-top:12px}
-.card::before{content:"";position:absolute;inset:6px;border:1.5px dashed rgba(201,151,63,.38);border-radius:9px;pointer-events:none}
+.card.stitched::before{content:"";position:absolute;inset:6px;border:1.5px dashed rgba(201,151,63,.38);border-radius:9px;pointer-events:none}
 .card>*{position:relative}
 .card h3{font-size:17px}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
@@ -84,10 +84,10 @@ button{font:inherit;cursor:pointer;scroll-margin-bottom:100px}
 .kpi div b{font-family:Georgia,serif;font-size:19px;color:#ff9a52}
 
 /* ================= THE FORGE YEAR ================= */
-.tabs button{font-size:10.5px;padding:8px 0;letter-spacing:0}
-.tabs button b{font-size:17px}
-.qhead{display:flex;gap:12px;align-items:center;background:var(--hide);border:1px solid var(--hideline);border-radius:14px;padding:12px;margin-top:12px;position:relative}
-.qhead::before{content:"";position:absolute;inset:5px;border:1.5px dashed rgba(201,151,63,.35);border-radius:9px;pointer-events:none}
+.tabs button{font-size:9px;padding:6px 0;letter-spacing:0;min-width:0;overflow:hidden;white-space:nowrap}
+.tabs button b{font-size:15px}
+.qhead{display:flex;gap:14px;align-items:center;background:linear-gradient(158deg,#2a2016,#14100b);border:1px solid #4a3826;border-radius:16px;padding:16px 14px;margin-top:14px;position:relative;box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.qhead::before{content:"";position:absolute;inset:0;border-radius:16px;box-shadow:inset 0 1px 0 rgba(201,151,63,.22),inset 0 0 44px rgba(0,0,0,.28);pointer-events:none}
 .qhead>*{position:relative}
 .portrait{width:64px;height:64px;border-radius:50%;border:2px solid var(--brass);background:#0f0c09;overflow:hidden;flex:0 0 auto;display:flex;align-items:center;justify-content:center}
 .portrait img{width:100%;height:100%;object-fit:cover}
@@ -117,8 +117,8 @@ button{font:inherit;cursor:pointer;scroll-margin-bottom:100px}
 .hand{display:flex;gap:10px;overflow-x:auto;padding:12px 4px 16px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
 .hand .card{scroll-snap-align:center;flex:0 0 78%}
 .cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-.card{position:relative;border-radius:12px;background:linear-gradient(180deg,#2a2016,#1a1410);border:1px solid #4a3826;box-shadow:0 10px 24px rgba(0,0,0,.5);overflow:hidden;display:flex;flex-direction:column;min-height:250px}
-.card::before{content:"";position:absolute;inset:5px;border:1.5px dashed rgba(201,151,63,.35);border-radius:8px;pointer-events:none;z-index:2}
+.hand .card,.cards .card,.reveal .card{position:relative;border-radius:12px;background:linear-gradient(180deg,#2a2016,#1a1410);border:1px solid #4a3826;box-shadow:0 10px 24px rgba(0,0,0,.5);overflow:hidden;display:flex;flex-direction:column;min-height:250px;padding:0}
+.hand .card::before,.cards .card::before,.reveal .card::before,.card.store::before{content:"";position:absolute;inset:5px;border:1.5px dashed rgba(201,151,63,.35);border-radius:8px;pointer-events:none;z-index:2}
 .card .art{height:96px;background:#0f0c09;position:relative;overflow:hidden;border-bottom:1px solid #4a3826}
 .card .art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .card .art svg{position:absolute;inset:0;width:100%;height:100%}
@@ -173,7 +173,7 @@ button{font:inherit;cursor:pointer;scroll-margin-bottom:100px}
 .reveal .xpup{font-family:Georgia,serif;font-size:40px;color:#ff9a52;text-shadow:0 0 22px rgba(255,122,47,.6)}
 .gbtn{margin-left:auto;border:1px solid var(--brass);color:var(--brass);background:transparent;border-radius:999px;padding:5px 12px;font-family:Georgia,serif;font-size:12.5px;cursor:pointer}
 .gbtn:active{background:rgba(201,151,63,.14)}
-.howbtn{margin:10px 0 0;border:1px dashed var(--brass);color:var(--brass);background:transparent;border-radius:8px;padding:10px 12px;font-family:Georgia,serif;font-size:14px;width:100%;cursor:pointer}
+.howbtn{margin:12px 2px 0 auto;border:0;border-bottom:1px solid rgba(201,151,63,.45);color:var(--brass);background:transparent;padding:2px 0;font-family:Georgia,serif;font-size:13px;cursor:pointer;display:block;width:max-content}
 .howbtn:active{background:rgba(201,151,63,.1)}
 #guide .in{justify-content:flex-start;max-width:600px;margin:0 auto;text-align:left;align-items:stretch}
 #guide .gtop{display:flex;align-items:center;gap:10px;width:100%;margin-bottom:10px}
@@ -259,13 +259,22 @@ a.go{text-decoration:none;display:inline-block}
 .arm .act button.go{background:linear-gradient(180deg,var(--brass),#8a6a2a)}
 #forgePreview svg{width:100%;height:auto;display:block}
 
+/* ---- polish pass ---- */
+.dmspeak{margin:16px 6px 2px 2px}
+.dmspeak .dmwho{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--brass);margin-bottom:7px}
+.dmspeak .dm{font-size:16.5px;line-height:1.5;max-width:94%}
+.card.store{background:linear-gradient(160deg,#241c14,#15100b);border-color:#4a3826}
+.skills{margin-top:14px;gap:4px}
+.arcmap{margin-top:16px}
+.portrait{width:60px;height:60px;box-shadow:0 0 0 4px rgba(201,151,63,.08)}
+#storefrontHost .card.store .lore{max-width:96%}
 </style>
 </head>
 <body>
 <header>
   <img src="bsa-logo.png" alt="">
   <div><h1>Back Office</h1><small>Bright Sword Artisan</small></div>
-  <button class="gbtn" id="guideBtn">Guide</button><span class="ver" id="verBadge" role="button" tabindex="0" style="cursor:pointer">office v3.4 &middot; Sep 25 2026</span>
+  <button class="gbtn" id="guideBtn">Guide</button><span class="ver" id="verBadge" role="button" tabindex="0" style="cursor:pointer">office v3.6 &middot; Sep 25 2026</span>
 </header>
 <div class="banner" id="storeBanner">This copy cannot save. Open the app from its web address (not from Downloads) so your entries keep. Until then, use <b>Save backup</b> on the Office tab after every session.</div>
 <div class="banner install" id="installBar" style="display:none;background:#1b1510;color:var(--parch);border-color:var(--brass)"><span id="installText">Keep this on your home screen so it is a tap away and updates itself.</span> <button class="btn small ember heat" id="installBtn" style="margin-left:8px">Add to home screen</button> <button class="btn small ghost heat" id="installDismiss">Not now</button></div>
@@ -284,7 +293,7 @@ a.go{text-decoration:none;display:inline-block}
     </div>
   </div>
   <div class="skills" id="qSkills"></div>
-  <div class="card" style="margin-top:12px;min-height:0;padding:0"><div class="body"><div class="type">The Dungeon Master</div><div class="dm" id="dmLine"></div></div></div>
+  <div class="dmspeak"><div class="dmwho">The Dungeon Master</div><div class="dm" id="dmLine"></div></div>
   <button class="howbtn" id="howBtn">New here? Read the guide &rsaquo;</button>
   <div id="storefrontHost"></div>
   <div class="arcmap" id="arcMap"></div>
@@ -345,6 +354,7 @@ a.go{text-decoration:none;display:inline-block}
 
 <!-- ================= SHOWS ================= -->
 <div class="pane on" id="p-shows">
+  <div class="filters qpills" style="margin:10px 0 0"><button data-pane="shows" class="on">Shows</button><button data-pane="log">Log</button><button data-pane="pl">P&amp;L</button></div>
   <div class="kpi" id="showKpi"></div>
   <div class="card">
     <h3>Add a show</h3>
@@ -361,6 +371,7 @@ a.go{text-decoration:none;display:inline-block}
 
 <!-- ================= BOOTH LOG ================= -->
 <div class="pane" id="p-log">
+  <div class="filters qpills" style="margin:10px 0 0"><button data-pane="shows">Shows</button><button data-pane="log" class="on">Log</button><button data-pane="pl">P&amp;L</button></div>
   <div class="card">
     <h3>Booth log</h3>
     <label>Which show</label><select id="l-show"></select>
@@ -378,6 +389,7 @@ a.go{text-decoration:none;display:inline-block}
 
 <!-- ================= P&L ================= -->
 <div class="pane" id="p-pl">
+  <div class="filters qpills" style="margin:10px 0 0"><button data-pane="shows">Shows</button><button data-pane="log">Log</button><button data-pane="pl" class="on">P&amp;L</button></div>
   <div class="card">
     <h3>Event profit and loss</h3>
     <label>Show</label><select id="pl-show"></select>
@@ -394,6 +406,7 @@ a.go{text-decoration:none;display:inline-block}
 
 <!-- ================= ORDERS ================= -->
 <div class="pane" id="p-orders">
+  <div class="filters qpills" style="margin:10px 0 0"><button data-pane="orders" class="on">Orders</button><button data-pane="lists">Lists</button><button data-pane="office">Office</button></div>
   <div class="card">
     <h3>Custom order</h3>
     <div class="g2"><div><label>Customer</label><input id="o-name" placeholder="Name"></div><div><label>Contact</label><input id="o-contact" placeholder="Phone, FB, email"></div></div>
@@ -418,6 +431,7 @@ a.go{text-decoration:none;display:inline-block}
 
 <!-- ================= CHECKLISTS ================= -->
 <div class="pane" id="p-lists">
+  <div class="filters qpills" style="margin:10px 0 0"><button data-pane="orders">Orders</button><button data-pane="lists" class="on">Lists</button><button data-pane="office">Office</button></div>
   <div class="card"><div class="row between"><h3>Load-out (night before)</h3><button class="btn small" data-reset="load">Reset</button></div><div id="ck-load"></div></div>
   <div class="card"><div class="row between"><h3>Setup (in this order)</h3><button class="btn small" data-reset="setup">Reset</button></div><div id="ck-setup"></div></div>
   <div class="card"><div class="row between"><h3>Breakdown</h3><button class="btn small" data-reset="down">Reset</button></div><div id="ck-down"></div></div>
@@ -426,6 +440,7 @@ a.go{text-decoration:none;display:inline-block}
 
 <!-- ================= OFFICE ================= -->
 <div class="pane" id="p-office">
+  <div class="filters qpills" style="margin:10px 0 0"><button data-pane="orders">Orders</button><button data-pane="lists">Lists</button><button data-pane="office" class="on">Office</button></div>
   <div class="card">
     <h3>Backup</h3>
     <div class="muted">Everything lives on this phone. Save a backup file after every show; load it on a new phone to move over.</div>
@@ -449,12 +464,8 @@ a.go{text-decoration:none;display:inline-block}
 <div class="tabs">
   <button data-pane="quest"><b>&#9876;&#xFE0E;</b>Quest</button>
   <button data-pane="library"><b>&#9830;&#xFE0E;</b>Cards</button>
-  <button class="on" data-pane="shows"><b>&#9670;&#xFE0E;</b>Shows</button>
-  <button data-pane="log"><b>&#8942;&#xFE0E;</b>Log</button>
-  <button data-pane="pl"><b>$</b>P&amp;L</button>
-  <button data-pane="orders"><b>&#9997;&#xFE0E;</b>Orders</button>
-  <button data-pane="lists"><b>&#10003;&#xFE0E;</b>Lists</button>
-  <button data-pane="office"><b>&#9881;&#xFE0E;</b>Office</button>
+  <button data-pane="shows"><b>&#8962;&#xFE0E;</b>Booth</button>
+  <button data-pane="orders"><b>&#9881;&#xFE0E;</b>Shop</button>
 </div>
 
 <div class="ov" id="opening"><div class="in">
@@ -1241,7 +1252,7 @@ document.addEventListener("click", function(e){
   if (t.closest("#raven")){ var txt=ravenText(); if (navigator.share){ navigator.share({text:txt}).catch(function(){}); } else if (navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(function(){toast("Copied for Mot");}); } return; }
 });
 /* pane switch hook: game panes render on open */
-document.addEventListener("click", function(e){ var tab=e.target.closest("[data-pane]"); if(!tab) return; var p=tab.getAttribute("data-pane"); if (p==="quest"||p==="library"||p==="bosses"||p==="journal"||p==="armory"||p==="herald") setTimeout(renderGame,0); setTimeout(flushReveals,60); if (p==="bosses"||p==="journal"||p==="quest"||p==="armory"||p==="herald"||p==="library"){ var lit=(p==="armory"||p==="herald"||p==="library")?"library":"quest"; setTimeout(function(){ document.querySelectorAll(".tabs [data-pane]").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-pane")===lit); }); document.querySelectorAll(".qpills [data-pane]").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-pane")===p); }); if (p==="armory") renderArmory(); if (p==="herald"){ renderHerald(); heraldRender(); } },0); } });
+document.addEventListener("click", function(e){ var tab=e.target.closest("[data-pane]"); if(!tab) return; var p=tab.getAttribute("data-pane"); if (p==="quest"||p==="library"||p==="bosses"||p==="journal"||p==="armory"||p==="herald") setTimeout(renderGame,0); setTimeout(flushReveals,60); if (p==="bosses"||p==="journal"||p==="quest"||p==="armory"||p==="herald"||p==="library"||p==="shows"||p==="log"||p==="pl"||p==="orders"||p==="lists"||p==="office"){ var lit=(p==="armory"||p==="herald"||p==="library")?"library":(p==="shows"||p==="log"||p==="pl")?"shows":(p==="orders"||p==="lists"||p==="office")?"orders":"quest"; setTimeout(function(){ document.querySelectorAll(".tabs [data-pane]").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-pane")===lit); }); document.querySelectorAll(".qpills [data-pane]").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-pane")===p); }); if (p==="armory") renderArmory(); if (p==="herald"){ renderHerald(); heraldRender(); } },0); } });
 /* patched office hooks fire questCheck via save() */
 
 function renderAll(){ renderShows(); renderLog(); renderPL(); renderOrders(); renderLists(); renderPrices(); renderGame(); }
@@ -1275,7 +1286,7 @@ renderAll();
 <script>
 (function(){
   "use strict";
-  var APP_VER="office v3.4", APP_DATE_DISP="Sep 25 2026", APP_DATE_ISO="2026-09-25", BUILD_TAG="bsa 3.4 2026-09-25";
+  var APP_VER="office v3.6", APP_DATE_DISP="Sep 25 2026", APP_DATE_ISO="2026-09-25", BUILD_TAG="bsa 3.6 2026-09-25";
   var standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone===true;
   function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
   function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }

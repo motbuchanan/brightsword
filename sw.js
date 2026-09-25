@@ -1,6 +1,6 @@
 /* Bright Sword office service worker. Cache key tracks the app version so a push always updates. */
-var VERSION="office v3.4";
-var CACHE="bsa-office-v3.4";
+var VERSION="office v3.6";
+var CACHE="bsa-office-v3.6";
 var SHELL=["brightsword-office.html","bsa-office.webmanifest","icon-192.png","icon-512.png","icon-512-maskable.png","apple-touch-icon.png","bsa-logo.png","bsa-logo-dark.png","bsa-qr-booth.png"];
 self.addEventListener("install", function(e){
   self.skipWaiting();
